@@ -28,8 +28,8 @@ export function generateStaticParams() {
 }
 
 // Generate metadata for the page
-export function generateMetadata({ params }: { params: RecipePageProps['params'] }) {
-
+export function generateMetadata({ params }: RecipePageProps) {
+  const { year, month, day, slug } = params
   const recipe = findRecipe(params)
 
   if (!recipe) {
@@ -55,7 +55,9 @@ function findRecipe(params: RecipePageProps['params']) {
 }
 
 // Recipe page component
-export default function RecipePage({ params }: RecipePageProps) {
+export default async function RecipePage({ params }: { params: Promise<{ params: RecipePageProps }> }) {
+  
+  // @ts-ignore
   const recipe = findRecipe(params)
 
   if (!recipe) {
