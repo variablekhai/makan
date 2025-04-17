@@ -28,8 +28,8 @@ export function generateStaticParams() {
 }
 
 // Helper function to find a recipe based on URL parameters
-async function findRecipe({ params }: { params: RecipePageProps['params'] }) {
-  const { year, month, day, slug } = await params
+function findRecipe({ params }: { params: RecipePageProps['params'] }) {
+  const { year, month, day, slug } = params
   return recipes.find((r) => {
     const [rYear, rMonth, rDay, rSlug] = r.slug.split("/")
     return rYear === year && rMonth === month && rDay === day && rSlug === slug
@@ -39,7 +39,7 @@ async function findRecipe({ params }: { params: RecipePageProps['params'] }) {
 // Recipe page component
 export default async function RecipePage({ params }: { params: RecipePageProps['params'] }) {
   
-  const recipe = await findRecipe({ params })
+  const recipe = findRecipe({ params })
 
   if (!recipe) {
     return (
