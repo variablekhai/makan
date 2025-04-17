@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Clock, ChefHat, Share2, Facebook, Twitter, Instagram, Printer } from "lucide-react"
 import { recipes } from "@/data/recipes"
+import { Metadata } from "next"
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -28,9 +29,8 @@ export function generateStaticParams() {
 }
 
 // Generate metadata for the page
-export function generateMetadata({ params }: RecipePageProps) {
-  const { year, month, day, slug } = params
-  const recipe = findRecipe({params})
+export function generateMetadata({ params }: { params: RecipePageProps['params'] }): Metadata {
+  const recipe = findRecipe({ params })
 
   if (!recipe) {
     return {
