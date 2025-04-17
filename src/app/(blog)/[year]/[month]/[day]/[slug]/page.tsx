@@ -28,8 +28,8 @@ export function generateStaticParams() {
 }
 
 // Generate metadata for the page
-export function generateMetadata({ params }: RecipePageProps) {
-  const { year, month, day, slug } = params
+export function generateMetadata({ params }: { params: RecipePageProps['params'] }) {
+
   const recipe = findRecipe(params)
 
   if (!recipe) {
