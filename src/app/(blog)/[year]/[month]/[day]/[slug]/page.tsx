@@ -37,8 +37,9 @@ function findRecipe({ params }: { params: RecipePageProps['params'] }) {
 }
 
 // Recipe page component
-export default async function RecipePage({ params }: { params: RecipePageProps['params'] }) {
-  
+export default async function RecipePage(props: { params: Promise<RecipePageProps['params']> }) {
+  const params = await props.params;
+
   const recipe = findRecipe({ params })
 
   if (!recipe) {

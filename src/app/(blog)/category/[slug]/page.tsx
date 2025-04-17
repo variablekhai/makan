@@ -9,9 +9,9 @@ export const dynamicParams = false
 
 // Define the structure of the page parameters
 type CategoryPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Generate static params for all categories
@@ -27,7 +27,8 @@ function findCategory(slug: string) {
 }
 
 // Generate metadata for the page
-export function generateMetadata({ params }: CategoryPageProps) {
+export async function generateMetadata(props: CategoryPageProps) {
+  const params = await props.params;
   const category = findCategory(params.slug)
 
   if (!category) {
@@ -43,7 +44,8 @@ export function generateMetadata({ params }: CategoryPageProps) {
   }
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage(props: CategoryPageProps) {
+  const params = await props.params;
   const category = findCategory(params.slug)
 
   if (!category) {
