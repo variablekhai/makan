@@ -5,7 +5,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Clock, ChefHat, Share2, Facebook, Twitter, Instagram, Printer } from "lucide-react"
 import { recipes } from "@/data/recipes"
-import { Metadata } from "next"
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -26,23 +25,6 @@ export function generateStaticParams() {
     const [year, month, day, slug] = recipe.slug.split("/")
     return { year, month, day, slug }
   })
-}
-
-// Generate metadata for the page
-export function generateMetadata({ params }: { params: RecipePageProps['params'] }): Metadata {
-  const recipe = findRecipe({ params })
-
-  if (!recipe) {
-    return {
-      title: "Recipe Not Found",
-      description: "The requested recipe could not be found.",
-    }
-  }
-
-  return {
-    title: `${recipe.title} – CookBook`,
-    description: recipe.description,
-  }
 }
 
 // Helper function to find a recipe based on URL parameters
