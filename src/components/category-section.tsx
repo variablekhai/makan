@@ -15,7 +15,10 @@ interface CategoryCardProps {
 
 export function CategoryCard({ category }: CategoryCardProps) {
   return (
-    <Link href={`/category/${category.slug}`} className="group relative block overflow-hidden rounded-md">
+    <Link
+      href={`/category/${category.slug}`}
+      className="group relative block overflow-hidden rounded-md"
+      legacyBehavior>
       <AspectRatio ratio={1}>
         <Image
           src={category.image}
@@ -29,7 +32,7 @@ export function CategoryCard({ category }: CategoryCardProps) {
         </div>
       </AspectRatio>
     </Link>
-  )
+  );
 }
 
 export function CategorySection() {

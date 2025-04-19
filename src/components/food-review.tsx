@@ -24,7 +24,7 @@ export function FoodReviewCard({ review }: FoodReviewProps) {
   return (
     <div className="group">
       <div className="relative overflow-hidden rounded-md mb-4">
-        <Link href={`/review/${review.slug}`}>
+        <Link href={`/review/${review.slug}`} legacyBehavior>
           <Image
             src={review.image}
             alt={review.title}
@@ -33,36 +33,35 @@ export function FoodReviewCard({ review }: FoodReviewProps) {
             className="w-full aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
-        <Link href={`/category/${review.category.slug}`} className="absolute top-4 left-4 category-badge">
+        <Link
+          href={`/category/${review.category.slug}`}
+          className="absolute top-4 left-4 category-badge"
+          legacyBehavior>
           {review.category.name}
         </Link>
       </div>
-
-      <Link href={`/review/${review.slug}`}>
+      <Link href={`/review/${review.slug}`} legacyBehavior>
         <h3 className="font-heading font-bold text-lg mb-2 group-hover:text-primary transition-colors">
           {review.title}
         </h3>
       </Link>
-
       <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-2">
         <Calendar className="w-4 h-4" />
         <span>{review.date}</span>
       </div>
-
       <div className="flex items-center space-x-1 mb-4">
         {[...Array(5)].map((_, i) => (
           <Star key={i} className={`w-4 h-4 ${i < review.rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`} />
         ))}
         <span className="ml-2 text-sm text-muted-foreground">{review.restaurant}</span>
       </div>
-
       <Button variant="outline" size="sm" asChild>
         <Link href={`/review/${review.slug}`}>
           Read review
         </Link>
       </Button>
     </div>
-  )
+  );
 }
 
 export function FoodReviews() {

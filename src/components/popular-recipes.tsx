@@ -20,7 +20,7 @@ export function PopularRecipeCard({ recipe }: PopularRecipeProps) {
   return (
     <div className="group">
       <AspectRatio ratio={4/3} className="overflow-hidden rounded-md mb-3">
-        <Link href={`/${recipe.slug}`}>
+        <Link href={`/${recipe.slug}`} legacyBehavior>
           <Image
             src={recipe.image}
             alt={recipe.title}
@@ -29,18 +29,19 @@ export function PopularRecipeCard({ recipe }: PopularRecipeProps) {
           />
         </Link>
       </AspectRatio>
-
-      <Link href={`/category/${recipe.category.slug}`} className="text-xs text-primary font-medium uppercase tracking-wider mb-1 inline-block">
+      <Link
+        href={`/category/${recipe.category.slug}`}
+        className="text-xs text-primary font-medium uppercase tracking-wider mb-1 inline-block"
+        legacyBehavior>
         {recipe.category.name}
       </Link>
-
-      <Link href={`/${recipe.slug}`}>
+      <Link href={`/${recipe.slug}`} legacyBehavior>
         <h3 className="font-heading font-semibold text-base group-hover:text-primary transition-colors">
           {recipe.title}
         </h3>
       </Link>
     </div>
-  )
+  );
 }
 
 export function PopularRecipes() {

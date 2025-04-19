@@ -84,7 +84,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
             {categoryRecipes.map((recipe) => (
               <div key={recipe.id} className="recipe-card group">
                 <div className="relative overflow-hidden rounded-md mb-4">
-                  <Link href={`/${recipe.slug}`}>
+                  <Link href={`/${recipe.slug}`} legacyBehavior>
                     <Image
                       src={recipe.image}
                       alt={recipe.title}
@@ -93,12 +93,15 @@ export default async function CategoryPage(props: CategoryPageProps) {
                       className="w-full aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </Link>
-                  <Link href={`/category/${recipe.category.slug}`} className="absolute top-4 left-4 category-badge">
+                  <Link
+                    href={`/category/${recipe.category.slug}`}
+                    className="absolute top-4 left-4 category-badge"
+                    legacyBehavior>
                     {recipe.category.name}
                   </Link>
                 </div>
 
-                <Link href={`/${recipe.slug}`}>
+                <Link href={`/${recipe.slug}`} legacyBehavior>
                   <h3 className="font-heading font-bold text-lg mb-2 group-hover:text-primary transition-colors">
                     {recipe.title}
                   </h3>
@@ -113,7 +116,10 @@ export default async function CategoryPage(props: CategoryPageProps) {
                     className="rounded-full"
                   />
                   <div className="flex text-sm text-muted-foreground">
-                    <Link href={`/author/${recipe.author.slug}`} className="hover:text-primary">
+                    <Link
+                      href={`/author/${recipe.author.slug}`}
+                      className="hover:text-primary"
+                      legacyBehavior>
                       {recipe.author.name}
                     </Link>
                     <span className="mx-1">•</span>
@@ -146,5 +152,5 @@ export default async function CategoryPage(props: CategoryPageProps) {
         )}
       </div>
     </div>
-  )
+  );
 }

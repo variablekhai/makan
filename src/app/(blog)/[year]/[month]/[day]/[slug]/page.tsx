@@ -83,7 +83,10 @@ export default async function RecipePage(props: { params: Promise<RecipePageProp
           <div className="flex items-center text-sm text-muted-foreground mb-6">
             <Link href="/" className="hover:text-primary">Home</Link>
             <span className="mx-2">/</span>
-            <Link href={`/category/${recipe.category.slug}`} className="hover:text-primary">{recipe.category.name}</Link>
+            <Link
+              href={`/category/${recipe.category.slug}`}
+              className="hover:text-primary"
+              legacyBehavior>{recipe.category.name}</Link>
             <span className="mx-2">/</span>
             <span>{recipe.title}</span>
           </div>
@@ -134,7 +137,10 @@ export default async function RecipePage(props: { params: Promise<RecipePageProp
 
           <div>
             <div className="mb-6">
-              <Link href={`/category/${recipe.category.slug}`} className="category-badge mb-4">
+              <Link
+                href={`/category/${recipe.category.slug}`}
+                className="category-badge mb-4"
+                legacyBehavior>
                 {recipe.category.name}
               </Link>
 
@@ -158,7 +164,10 @@ export default async function RecipePage(props: { params: Promise<RecipePageProp
                 <div>
                   <div className="flex items-center">
                     <span className="text-sm">by</span>
-                    <Link href={`/author/${recipe.author.slug}`} className="font-medium hover:text-primary ml-1">
+                    <Link
+                      href={`/author/${recipe.author.slug}`}
+                      className="font-medium hover:text-primary ml-1"
+                      legacyBehavior>
                       {recipe.author.name}
                     </Link>
                   </div>
@@ -228,20 +237,32 @@ export default async function RecipePage(props: { params: Promise<RecipePageProp
               <AvatarFallback>{recipe.author.name.slice(0, 2)}</AvatarFallback>
             </Avatar>
             <div>
-              <Link href={`/author/${recipe.author.slug}`} className="font-heading font-semibold text-lg hover:text-primary">
+              <Link
+                href={`/author/${recipe.author.slug}`}
+                className="font-heading font-semibold text-lg hover:text-primary"
+                legacyBehavior>
                 {recipe.author.name}
               </Link>
               <p className="text-muted-foreground">
                 Cras mattis consectetur purus sit amet fermentum. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
               </p>
               <div className="flex gap-2 mt-2">
-                <Link href="https://facebook.com" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="https://facebook.com"
+                  className="text-muted-foreground hover:text-primary"
+                  legacyBehavior>
                   <Facebook size={16} />
                 </Link>
-                <Link href="https://twitter.com" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="https://twitter.com"
+                  className="text-muted-foreground hover:text-primary"
+                  legacyBehavior>
                   <Twitter size={16} />
                 </Link>
-                <Link href="https://instagram.com" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="https://instagram.com"
+                  className="text-muted-foreground hover:text-primary"
+                  legacyBehavior>
                   <Instagram size={16} />
                 </Link>
               </div>
@@ -256,7 +277,7 @@ export default async function RecipePage(props: { params: Promise<RecipePageProp
             {relatedRecipes.map((relatedRecipe) => (
               <div key={relatedRecipe.id} className="group">
                 <div className="relative overflow-hidden rounded-md mb-4">
-                  <Link href={`/${relatedRecipe.slug}`}>
+                  <Link href={`/${relatedRecipe.slug}`} legacyBehavior>
                     <Image
                       src={relatedRecipe.image}
                       alt={relatedRecipe.title}
@@ -265,12 +286,15 @@ export default async function RecipePage(props: { params: Promise<RecipePageProp
                       className="w-full aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </Link>
-                  <Link href={`/category/${relatedRecipe.category.slug}`} className="absolute top-2 left-2 category-badge text-xs">
+                  <Link
+                    href={`/category/${relatedRecipe.category.slug}`}
+                    className="absolute top-2 left-2 category-badge text-xs"
+                    legacyBehavior>
                     {relatedRecipe.category.name}
                   </Link>
                 </div>
 
-                <Link href={`/${relatedRecipe.slug}`}>
+                <Link href={`/${relatedRecipe.slug}`} legacyBehavior>
                   <h3 className="font-heading font-semibold text-base mb-2 group-hover:text-primary transition-colors">
                     {relatedRecipe.title}
                   </h3>
@@ -345,5 +369,5 @@ export default async function RecipePage(props: { params: Promise<RecipePageProp
         </div>
       </div>
     </div>
-  )
+  );
 }

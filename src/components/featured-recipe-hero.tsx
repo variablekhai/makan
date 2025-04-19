@@ -32,7 +32,7 @@ export function FeaturedRecipeCard({ recipe }: FeaturedRecipeProps) {
   return (
     <div className="group grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div className="relative overflow-hidden rounded-md">
-        <Link href={`/${recipe.slug}`}>
+        <Link href={`/${recipe.slug}`} legacyBehavior>
           <Image
             src={recipe.image}
             alt={recipe.title}
@@ -42,15 +42,17 @@ export function FeaturedRecipeCard({ recipe }: FeaturedRecipeProps) {
           />
         </Link>
       </div>
-
       <div className="space-y-4">
         <div className="mb-2">
-          <Link href={`/category/${recipe.category.slug}`} className="category-badge">
+          <Link
+            href={`/category/${recipe.category.slug}`}
+            className="category-badge"
+            legacyBehavior>
             {recipe.category.name}
           </Link>
         </div>
 
-        <Link href={`/${recipe.slug}`}>
+        <Link href={`/${recipe.slug}`} legacyBehavior>
           <h2 className="text-3xl font-heading font-bold hover:text-primary transition-colors">
             {recipe.title}
           </h2>
@@ -72,7 +74,10 @@ export function FeaturedRecipeCard({ recipe }: FeaturedRecipeProps) {
             <AvatarFallback>{recipe.author.name.slice(0, 2)}</AvatarFallback>
           </Avatar>
           <div>
-            <Link href={`/author/${recipe.author.slug}`} className="font-medium hover:text-primary">
+            <Link
+              href={`/author/${recipe.author.slug}`}
+              className="font-medium hover:text-primary"
+              legacyBehavior>
               {recipe.author.name}
             </Link>
             <p className="text-sm text-muted-foreground">{recipe.date}</p>
@@ -86,7 +91,7 @@ export function FeaturedRecipeCard({ recipe }: FeaturedRecipeProps) {
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 export function FeaturedRecipeHero() {

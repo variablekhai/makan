@@ -18,15 +18,26 @@ export default function AuthHeader() {
       <div className="container-custom py-3">
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center space-x-4">
-            <Link href="https://facebook.com/wpzoom" target="_blank" className="text-muted-foreground hover:text-foreground">
-              <Facebook size={18} />
-              <span className="sr-only">Facebook</span>
+            <Link
+              href="https://facebook.com/wpzoom"
+              target="_blank"
+              className="text-muted-foreground hover:text-foreground"
+              legacyBehavior>
+              <span className="sr-only"><Facebook size={18} />Facebook</span>
             </Link>
-            <Link href="https://instagram.com/wpzoom" target="_blank" className="text-muted-foreground hover:text-foreground">
+            <Link
+              href="https://instagram.com/wpzoom"
+              target="_blank"
+              className="text-muted-foreground hover:text-foreground"
+              legacyBehavior>
               <Instagram size={18} />
               <span className="sr-only">Instagram</span>
             </Link>
-            <Link href="https://youtube.com" target="_blank" className="text-muted-foreground hover:text-foreground">
+            <Link
+              href="https://youtube.com"
+              target="_blank"
+              className="text-muted-foreground hover:text-foreground"
+              legacyBehavior>
               <Youtube size={18} />
               <span className="sr-only">Youtube</span>
             </Link>
@@ -73,14 +84,13 @@ export default function AuthHeader() {
               </Link>
             </Button>
             <Button asChild className="bg-primary hover:bg-primary/90">
-              <Link href="/login">
-              <LogIn className="h-4 w-4" />
-              Login
+              <Link href="/login" legacyBehavior>
+              <span><LogIn className="h-4 w-4" />Login</span>
               </Link>
             </Button>
           </div>
         </div>
       </div>
     </header>
-  )
+  );
 }

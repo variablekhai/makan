@@ -29,7 +29,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <div className="recipe-card group">
       <div className="relative overflow-hidden rounded-md mb-4">
-        <Link href={`/${recipe.slug}`}>
+        <Link href={`/${recipe.slug}`} legacyBehavior>
           <Image
             src={recipe.image}
             alt={recipe.title}
@@ -38,31 +38,34 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             className="w-full aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
-        <Link href={`/category/${recipe.category.slug}`} className="absolute top-4 left-4 category-badge">
+        <Link
+          href={`/category/${recipe.category.slug}`}
+          className="absolute top-4 left-4 category-badge"
+          legacyBehavior>
           {recipe.category.name}
         </Link>
       </div>
-
-      <Link href={`/${recipe.slug}`}>
+      <Link href={`/${recipe.slug}`} legacyBehavior>
         <h3 className="font-heading font-bold text-lg mb-2 group-hover:text-primary transition-colors">
           {recipe.title}
         </h3>
       </Link>
-
       <div className="flex items-center space-x-3 mb-3">
         <Avatar className="w-6 h-6">
           <AvatarImage src={recipe.author.image} alt={recipe.author.name} />
           <AvatarFallback>{recipe.author.name.slice(0, 2)}</AvatarFallback>
         </Avatar>
         <div className="flex text-sm text-muted-foreground">
-          <Link href={`/author/${recipe.author.slug}`} className="hover:text-primary">
+          <Link
+            href={`/author/${recipe.author.slug}`}
+            className="hover:text-primary"
+            legacyBehavior>
             {recipe.author.name}
           </Link>
           <span className="mx-1">•</span>
           <span>{recipe.date}</span>
         </div>
       </div>
-
       <div className="flex items-center space-x-2 text-sm text-muted-foreground">
         <Clock className="w-4 h-4" />
         <span>{recipe.time}</span>
@@ -70,7 +73,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
         <span>{recipe.difficulty}</span>
       </div>
     </div>
-  )
+  );
 }
 
 interface RecipeGridProps {

@@ -26,7 +26,7 @@ export default function CategoriesPage() {
               key={category.slug}
               href={`/category/${category.slug}`}
               className="group relative block aspect-square overflow-hidden rounded-md"
-            >
+              legacyBehavior>
               <Image
                 src={category.image}
                 alt={category.name}
@@ -42,5 +42,5 @@ export default function CategoriesPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

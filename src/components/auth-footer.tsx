@@ -35,15 +35,27 @@ export function AuthFooter() {
             </div>
 
             <div className="flex items-center space-x-4">
-              <Link href="https://facebook.com/wpzoom" target="_blank" className="text-muted-foreground hover:text-foreground">
+              <Link
+                href="https://facebook.com/wpzoom"
+                target="_blank"
+                className="text-muted-foreground hover:text-foreground"
+                legacyBehavior>
                 <Facebook size={18} />
                 <span className="sr-only">Facebook</span>
               </Link>
-              <Link href="https://instagram.com/wpzoom" target="_blank" className="text-muted-foreground hover:text-foreground">
+              <Link
+                href="https://instagram.com/wpzoom"
+                target="_blank"
+                className="text-muted-foreground hover:text-foreground"
+                legacyBehavior>
                 <Instagram size={18} />
                 <span className="sr-only">Instagram</span>
               </Link>
-              <Link href="https://youtube.com" target="_blank" className="text-muted-foreground hover:text-foreground">
+              <Link
+                href="https://youtube.com"
+                target="_blank"
+                className="text-muted-foreground hover:text-foreground"
+                legacyBehavior>
                 <Youtube size={18} />
                 <span className="sr-only">Youtube</span>
               </Link>
@@ -53,5 +65,5 @@ export function AuthFooter() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

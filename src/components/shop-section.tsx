@@ -17,7 +17,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <div className="group">
       <div className="bg-white p-4 rounded-md shadow-sm mb-4 hover:shadow-md transition-shadow duration-300">
-        <Link href={`/product/${product.slug}`} className="block">
+        <Link href={`/product/${product.slug}`} className="block" legacyBehavior>
           <Image
             src={product.image}
             alt={product.title}
@@ -27,9 +27,8 @@ export function ProductCard({ product }: ProductCardProps) {
           />
         </Link>
       </div>
-
       <div className="text-center">
-        <Link href={`/product/${product.slug}`}>
+        <Link href={`/product/${product.slug}`} legacyBehavior>
           <h3 className="font-heading font-bold text-lg mb-2 group-hover:text-primary transition-colors">
             {product.title}
           </h3>
@@ -42,7 +41,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 export function ShopSection() {
