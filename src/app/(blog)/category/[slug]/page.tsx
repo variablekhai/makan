@@ -39,7 +39,7 @@ export async function generateMetadata(props: CategoryPageProps) {
   }
 
   return {
-    title: `${category.name} Recipes – CookBook`,
+    title: `${category.name} Recipes – Makan²`,
     description: `Browse our collection of delicious ${category.name.toLowerCase()} recipes.`,
   }
 }

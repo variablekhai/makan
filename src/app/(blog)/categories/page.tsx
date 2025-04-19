@@ -1,11 +1,11 @@
-import Image from "next/image"
-import Link from "next/link"
-import { categories } from "@/data/recipes"
+import Image from "next/image";
+import Link from "next/link";
+import { categories } from "@/data/recipes";
 
 export const metadata = {
-  title: "Categories – CookBook",
-  description: "Browse recipe categories in our food blog."
-}
+  title: "Categories – Makan²",
+  description: "Browse recipe categories in our food blog.",
+};
 
 export default function CategoriesPage() {
   return (
@@ -16,7 +16,8 @@ export default function CategoriesPage() {
             Recipe Categories
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Browse our collection of delicious recipes by category and find the perfect dish for any occasion.
+            Browse our collection of delicious recipes by category and find the
+            perfect dish for any occasion.
           </p>
         </div>
 
@@ -25,17 +26,21 @@ export default function CategoriesPage() {
             <Link
               key={category.slug}
               href={`/category/${category.slug}`}
-              className="group relative block aspect-square overflow-hidden rounded-md"
-              legacyBehavior>
-              <Image
-                src={category.image}
-                alt={category.name}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20 flex flex-col items-center justify-center p-4 text-white">
-                <h3 className="text-xl font-heading font-bold mb-1">{category.name}</h3>
-                <p className="text-sm opacity-90">{category.count} recipes</p>
+              legacyBehavior
+            >
+              <div className="group relative block aspect-square overflow-hidden rounded-md">
+                <Image
+                  src={category.image}
+                  alt={category.name}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20 flex flex-col items-center justify-center p-4 text-white">
+                  <h3 className="text-xl font-heading font-bold mb-1">
+                    {category.name}
+                  </h3>
+                  <p className="text-sm opacity-90">{category.count} recipes</p>
+                </div>
               </div>
             </Link>
           ))}

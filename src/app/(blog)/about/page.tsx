@@ -3,8 +3,8 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 export const metadata = {
-  title: "About – CookBook",
-  description: "CookBook is more than a blog, it's a family."
+  title: "About – Makan²",
+  description: "Makan² is more than a blog, it's a family."
 }
 
 export default function AboutPage() {
@@ -14,7 +14,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
           <div>
             <h1 className="text-3xl md:text-4xl font-heading font-bold mb-6">
-              CookBook is more than a blog, it's a family.
+              Makan² is more than a blog, it's a family.
             </h1>
             <p className="text-muted-foreground mb-4">
               This is some dummy copy. You're not really supposed to read this dummy copy, it is just a place holder for people who need some type to visualize what the actual copy might look like if it were real content.
@@ -23,8 +23,8 @@ export default function AboutPage() {
 
           <div>
             <Image
-              src="https://i0.wp.com/demo.wpzoom.com/cookbook/files/2022/04/image-64.png"
-              alt="About CookBook"
+              src="https://i0.wp.com/demo.wpzoom.com/Makan²/files/2022/04/image-64.png"
+              alt="About Makan²"
               width={570}
               height={715}
               className="rounded-md"
@@ -87,7 +87,7 @@ export default function AboutPage() {
         <div
           className="py-12 px-4 md:px-8 rounded-md relative bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://demo.wpzoom.com/cookbook/files/2022/04/brooke-lark-F_5g8EEHYE-unsplash-1-1.png')`,
+            backgroundImage: `url('https://demo.wpzoom.com/Makan²/files/2022/04/brooke-lark-F_5g8EEHYE-unsplash-1-1.png')`,
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             backgroundBlendMode: 'overlay'
           }}
@@ -113,22 +113,22 @@ export default function AboutPage() {
 const authors = [
   {
     name: "Darrin Stott",
-    image: "https://i0.wp.com/demo.wpzoom.com/cookbook/files/2022/04/Ellipse-7.png",
-    link: "https://demo.wpzoom.com/cookbook/author/erikbrown/",
+    image: "https://i0.wp.com/demo.wpzoom.com/Makan²/files/2022/04/Ellipse-7.png",
+    link: "https://demo.wpzoom.com/Makan²/author/erikbrown/",
   },
   {
     name: "Lucille Perkins",
-    image: "https://i0.wp.com/demo.wpzoom.com/cookbook/files/2022/04/Ellipse-6.png",
-    link: "https://demo.wpzoom.com/cookbook/author/erikbrown/",
+    image: "https://i0.wp.com/demo.wpzoom.com/Makan²/files/2022/04/Ellipse-6.png",
+    link: "https://demo.wpzoom.com/Makan²/author/erikbrown/",
   },
   {
     name: "Dianne Dixon",
-    image: "https://i0.wp.com/demo.wpzoom.com/cookbook/files/2022/04/Ellipse-9.png",
-    link: "https://demo.wpzoom.com/cookbook/author/erikbrown/",
+    image: "https://i0.wp.com/demo.wpzoom.com/Makan²/files/2022/04/Ellipse-9.png",
+    link: "https://demo.wpzoom.com/Makan²/author/erikbrown/",
   },
   {
     name: "Hanna Hageman",
-    image: "https://i0.wp.com/demo.wpzoom.com/cookbook/files/2022/04/Ellipse-8.png",
-    link: "https://demo.wpzoom.com/cookbook/author/erikbrown/",
+    image: "https://i0.wp.com/demo.wpzoom.com/Makan²/files/2022/04/Ellipse-8.png",
+    link: "https://demo.wpzoom.com/Makan²/author/erikbrown/",
   }
 ]

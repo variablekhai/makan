@@ -3,8 +3,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
 export const metadata = {
-  title: "Contact – CookBook",
-  description: "Get in touch with the CookBook team."
+  title: "Contact – Makan²",
+  description: "Get in touch with the Makan² team."
 }
 
 export default function ContactPage() {
@@ -86,7 +86,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h3 className="font-heading font-semibold mb-2">Email</h3>
-              <p className="text-muted-foreground">hello@cookbook.com</p>
+              <p className="text-muted-foreground">hello@Makan².com</p>
             </div>
 
             <div className="text-center">
