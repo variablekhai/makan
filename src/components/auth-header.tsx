@@ -30,16 +30,16 @@ export default function AuthHeader() {
               target="_blank"
               className="text-muted-foreground hover:text-foreground"
               legacyBehavior>
-              <Instagram size={18} />
-              <span className="sr-only">Instagram</span>
+              
+              <span className="sr-only"><Instagram size={18} />Instagram</span>
             </Link>
             <Link
               href="https://youtube.com"
               target="_blank"
               className="text-muted-foreground hover:text-foreground"
               legacyBehavior>
-              <Youtube size={18} />
-              <span className="sr-only">Youtube</span>
+              
+              <span className="sr-only"><Youtube size={18} />Youtube</span>
             </Link>
           </div>
           <Button
@@ -83,9 +83,9 @@ export default function AuthHeader() {
               Register
               </Link>
             </Button>
-            <Button asChild className="bg-primary hover:bg-primary/90">
+            <Button className="bg-primary hover:bg-primary/90">
               <Link href="/login" legacyBehavior>
-              <span><LogIn className="h-4 w-4" />Login</span>
+                <span>Login</span>
               </Link>
             </Button>
           </div>
