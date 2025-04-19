@@ -17,7 +17,7 @@ const eslintConfig = [
       "react/no-unescaped-entities": "off",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-unused-expressions": "off",
-
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
 ];
