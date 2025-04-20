@@ -179,7 +179,7 @@ export function Header() {
                   <Link href="/blog" legacyBehavior passHref>
                     <NavigationMenuLink className="flex items-center font-medium px-4 py-2 group hover:text-primary transition-colors">
                       <BookText className="h-4 w-4 mr-2" />
-                      Blog
+                      My Blog
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
