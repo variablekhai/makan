@@ -86,7 +86,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h3 className="font-heading font-semibold mb-2">Email</h3>
-              <p className="text-muted-foreground">hello@Makan².com</p>
+              <p className="text-muted-foreground">hello@makan.com</p>
             </div>
 
             <div className="text-center">
@@ -96,7 +96,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h3 className="font-heading font-semibold mb-2">Phone</h3>
-              <p className="text-muted-foreground">+1 (123) 456-7890</p>
+              <p className="text-muted-foreground">+60 17 182 5764</p>
             </div>
 
             <div className="text-center">
@@ -107,7 +107,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h3 className="font-heading font-semibold mb-2">Location</h3>
-              <p className="text-muted-foreground">123 Recipe St, Foodville, CA 94123</p>
+              <p className="text-muted-foreground">13, Jalan Semarak, 36000</p>
             </div>
           </div>
         </div>

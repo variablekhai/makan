@@ -228,19 +228,9 @@ const categories = [
     href: "/category/main",
   },
   {
-    title: "Pasta",
-    description: "Classic and creative pasta recipes",
-    href: "/category/pasta",
-  },
-  {
     title: "Soups",
     description: "Comforting soups for any season",
     href: "/category/soups",
-  },
-  {
-    title: "Salads",
-    description: "Fresh and healthy salad recipes",
-    href: "/category/salads",
   },
   {
     title: "Desserts",
@@ -248,8 +238,8 @@ const categories = [
     href: "/category/desserts",
   },
   {
-    title: "Cocktails",
-    description: "Refreshing drinks and cocktail recipes",
+    title: "Drinks",
+    description: "Refreshing drinks recipes",
     href: "/category/cocktails",
   },
 ];

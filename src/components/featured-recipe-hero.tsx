@@ -120,93 +120,79 @@ export function FeaturedRecipeHero() {
 
 const featuredRecipes = [
   {
-    title: "Rosemary & Honey Whiskey Cocktail",
-    slug: "2022/04/13/rosemary-honey-whiskey-cocktail",
-    image: "https://ext.same-assets.com/543785121/746458956.jpeg",
-    description: "This is some dummy copy. You're not really supposed to read this dummy copy, it is just a place holder for people who need some type to visualize what the actual copy might look like if it were real content.",
-    time: "15 min",
-    difficulty: "Easy",
-    category: {
-      name: "Cocktails",
-      slug: "cocktails"
+    "id": "5",
+    "title": "Satay Chicken Skewers",
+    "slug": "2025/04/20/satay-chicken-skewers",
+    "image": "https://www.unileverfoodsolutions.com.my/dam/global-ufs/mcos/SEA/calcmenu/recipes/MY-recipes/chicken-&-other-poultry-dishes/satay-ayam/main-header.jpg",
+    "description": "Grilled skewers of marinated chicken served with spicy peanut sauce, cucumber, and rice cakes.",
+    "time": "35 min",
+    "difficulty": "Easy",
+    "category": {
+      "name": "Appetizers",
+      "slug": "appetizers"
     },
-    author: {
-      name: "Pavel Ciorici",
-      image: "https://ext.same-assets.com/1113238889/2441124720.png",
-      slug: "pavel-ciorici"
+    "author": {
+      "name": "Muhammad Ali",
+      "image": "https://avatar.iran.liara.run/public",
+      "slug": "m-ali"
     },
-    date: "April 13, 2022"
+    "date": "April 20, 2025"
   },
   {
-    title: "Grilled Chicken Mushroom Toast",
-    slug: "2022/04/10/bruschetta-with-beef-tartare",
-    image: "https://ext.same-assets.com/543785121/1490506319.jpeg",
-    description: "This is some dummy copy. You're not really supposed to read this dummy copy, it is just a place holder for people who need some type to visualize what the actual copy might look like if it were real content.",
-    time: "20 min",
-    difficulty: "Easy",
-    category: {
-      name: "Appetizers",
-      slug: "appetizers"
+    "id": "6",
+    "title": "Beef Rendang",
+    "slug": "2025/04/20/beef-rendang",
+    "image": "https://www.elmundoeats.com/wp-content/uploads/2023/04/A-bowl-of-beef-rendang.jpg",
+    "description": "A slow-cooked dry curry with tender beef simmered in coconut milk and spices until rich and aromatic.",
+    "time": "2 hrs",
+    "difficulty": "Hard",
+    "category": {
+      "name": "Main Course",
+      "slug": "main-course"
     },
-    author: {
-      name: "Erik Brown",
-      image: "https://ext.same-assets.com/1113238889/141462346.png",
-      slug: "erik-brown"
+    "author": {
+      "name": "Zulkarnian",
+      "image": "https://avatar.iran.liara.run/public",
+      "slug": "zulkarnian"
     },
-    date: "April 10, 2022"
+    "date": "April 20, 2025"
   },
   {
-    title: "Mediterranean Chickpea Salad",
-    slug: "2022/03/22/mediterranean-chickpea-salad",
-    image: "https://ext.same-assets.com/543785121/3068330999.jpeg",
-    description: "This is some dummy copy. You're not really supposed to read this dummy copy, it is just a place holder for people who need some type to visualize what the actual copy might look like if it were real content.",
-    time: "30 min",
-    difficulty: "Easy",
-    category: {
-      name: "Salads",
-      slug: "salads"
+    "id": "7",
+    "title": "Cendol",
+    "slug": "2025/04/20/cendol",
+    "image": "https://asianinspirations.com.au/wp-content/uploads/2019/11/R00389-Cendol-1920x1280.jpg",
+    "description": "A sweet dessert made with shaved ice, green rice flour jelly, coconut milk, and palm sugar syrup.",
+    "time": "20 min",
+    "difficulty": "Easy",
+    "category": {
+      "name": "Desserts",
+      "slug": "desserts"
     },
-    author: {
-      name: "Erik Brown",
-      image: "https://ext.same-assets.com/1113238889/141462346.png",
-      slug: "erik-brown"
+    "author": {
+      "name": "Fathullah",
+      "image": "https://avatar.iran.liara.run/public",
+      "slug": "fathullah"
     },
-    date: "March 22, 2022"
+    "date": "April 20, 2025"
   },
   {
-    title: "Moscow Mule Cocktail",
-    slug: "2022/03/13/moscow-mule-cocktail",
-    image: "https://ext.same-assets.com/543785121/3923550811.jpeg",
-    description: "This is some dummy copy. You're not really supposed to read this dummy copy, it is just a place holder for people who need some type to visualize what the actual copy might look like if it were real content.",
-    time: "10 minutes",
-    difficulty: "Easy",
-    category: {
-      name: "Cocktails",
-      slug: "cocktails"
+    "id": "8",
+    "title": "Mee Goreng Mamak",
+    "slug": "2025/04/20/mee-goreng-mamak",
+    "image": "https://www.unileverfoodsolutions.com.my/dam/global-ufs/mcos/SEA/calcmenu/recipes/MY-recipes/vegetables-&-vegetable-dishes/mee-goreng-mamak/main-header.jpg",
+    "description": "Spicy stir-fried yellow noodles with tofu, egg, potato, and a savory-sweet tomato sauce.",
+    "time": "25 min",
+    "difficulty": "Easy",
+    "category": {
+      "name": "Street Food",
+      "slug": "street-food"
     },
-    author: {
-      name: "Erik Brown",
-      image: "https://ext.same-assets.com/1113238889/141462346.png",
-      slug: "erik-brown"
+    "author": {
+      "name": "Mamak Legend",
+      "image": "https://avatar.iran.liara.run/public",
+      "slug": "mamak-legend"
     },
-    date: "March 13, 2022"
+    "date": "April 20, 2025"
   },
-  {
-    title: "Blood Orange Mimosa",
-    slug: "2022/02/10/blood-orange-mimosa",
-    image: "https://ext.same-assets.com/543785121/103569570.jpeg",
-    description: "This is some dummy copy. You're not really supposed to read this dummy copy, it is just a place holder for people who need some type to visualize what the actual copy might look like if it were real content.",
-    time: "15 minutes",
-    difficulty: "Easy",
-    category: {
-      name: "Cocktails",
-      slug: "cocktails"
-    },
-    author: {
-      name: "Erik Brown",
-      image: "https://ext.same-assets.com/1113238889/141462346.png",
-      slug: "erik-brown"
-    },
-    date: "February 10, 2022"
-  }
 ]

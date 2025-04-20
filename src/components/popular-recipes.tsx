@@ -62,30 +62,30 @@ export function PopularRecipes() {
 
 const popularRecipes = [
   {
-    title: "Grilled Chicken Mushroom Toast",
-    slug: "2022/04/10/bruschetta-with-beef-tartare",
-    image: "https://ext.same-assets.com/543785121/1490506319.jpeg",
+    title: "Nyonya Laksa",
+    slug: "2022/04/10/nyonya-laksa",
+    image: "https://www.seriouseats.com/thmb/VQj_9MvhH8JXywMoQCv18PTho-U=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__serious_eats__seriouseats.com__recipes__images__2011__08__20110801-laksa-primary-c6f0e355de0a46cdb18b092fe5105b30.jpg",
     category: {
-      name: "Appetizers",
-      slug: "appetizers"
+      name: "Main",
+      slug: "main"
     }
   },
   {
-    title: "Pistachio Pavlova Meringue Cakes",
-    slug: "2021/11/23/pistachio-pavlova-meringue-cakes",
-    image: "https://ext.same-assets.com/543785121/3477451376.jpeg",
+    title: "Kuih Dadar (Pandan Coconut Crepes)",
+    slug: "2021/11/23/kuih-dadar",
+    image: "https://delishglobe.com/wp-content/uploads/2025/03/Kuih-Dadar--1024x749.png",
     category: {
       name: "Desserts",
       slug: "desserts"
     }
   },
   {
-    title: "Roasted Carrot Soup",
-    slug: "2019/04/03/roasted-carrot-soup",
-    image: "https://ext.same-assets.com/543785121/3894744592.jpeg",
+    title: "Ayam Pongteh (Nyonya Braised Chicken)",
+    slug: "2019/04/03/ayam-pongteh",
+    image: "https://www.periuk.my/static/a4770a7659f4da65ca9cc5033c0773e1/f6085/PRec-Granny-Ayam-Pongteh-1-scaled.jpg",
     category: {
-      name: "Soups",
-      slug: "soups"
+      name: "Main",
+      slug: "main"
     }
   }
 ]

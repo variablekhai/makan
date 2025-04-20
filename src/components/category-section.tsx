@@ -55,19 +55,19 @@ const categories = [
   {
     name: "Main",
     slug: "main",
-    image: "https://ext.same-assets.com/543785121/3068330999.jpeg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlyYqlMWihydRmKH593aaedlx9mTjiT0jA1w&s",
     count: 3
   },
   {
     name: "Appetizers",
     slug: "appetizers",
-    image: "https://ext.same-assets.com/543785121/1490506319.jpeg",
+    image: "https://www.ajinomoto.com.my/sites/default/files/content/recipe/image/2023-04/Cucur%20Jagung%20Ketam.jpg",
     count: 2
   },
   {
     name: "Desserts",
     slug: "desserts",
-    image: "https://ext.same-assets.com/543785121/3477451376.jpeg",
+    image: "https://images.ctfassets.net/u128j5s4q9gv/61TqhppWWhVPHLWbu2akcu/5667b32e6d2cbdff7d43ef20c6a739c0/Screen_Shot_2019-01-17_at_12.40.14.png",
     count: 6
   }
 ]

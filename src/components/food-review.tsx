@@ -82,51 +82,52 @@ export function FoodReviews() {
 
 const foodReviews = [
   {
-    title: "The Perfect Pasta Experience at Trattoria Milano",
-    slug: "2023/04/13/trattoria-milano-pasta-review",
-    image: "https://ext.same-assets.com/543785121/746458956.jpeg",
-    date: "April 13, 2023",
-    rating: 4,
-    restaurant: "Trattoria Milano",
-    category: {
-      name: "Italian",
-      slug: "italian"
+    "title": "Refined Malaysian Flavors at ATAS",
+    "slug": "2025/04/20/atas-modern-malaysian-eatery-review",
+    "image": "https://theruma.com/file/webpage/shared/banner/dining/atas-5-optimized.jpg",
+    "date": "April 20, 2025",
+    "rating": 4,
+    "restaurant": "ATAS Malaysian Eatery",
+    "category": {
+      "name": "Malaysian",
+      "slug": "malaysian"
     }
   },
   {
-    title: "Spicy Delights at Bangkok Street Food",
-    slug: "2023/03/13/bangkok-street-food-review",
-    image: "https://ext.same-assets.com/543785121/3923550811.jpeg",
-    date: "March 13, 2023",
-    rating: 5,
-    restaurant: "Bangkok Street Food",
-    category: {
-      name: "Thai",
-      slug: "thai"
+    "title": "Innovative Dining at Beta KL",
+    "slug": "2025/04/20/beta-kl-review",
+    "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiOcfqXV1lQZCjVKdKlFFfywv5DGSM4mtD0H_nW0hedjvlJJpR-ntT9s6m2cVjED-dWmLsGDg0WUygtqkvwAy2KsWRZaq7Ej3I_ulkA8h0-Smga9yTNTrABRzjKZaGqQ9oyRW8KnaYwVUwq/s1600/L1240992-001.jpg",
+    "date": "April 20, 2025",
+    "rating": 5,
+    "restaurant": "Beta KL",
+    "category": {
+      "name": "Modern Malaysian",
+      "slug": "modern-malaysian"
     }
   },
   {
-    title: "Seafood Paradise at Ocean Grill",
-    slug: "2023/02/10/ocean-grill-seafood-review",
-    image: "https://ext.same-assets.com/543785121/103569570.jpeg",
-    date: "February 10, 2023",
-    rating: 3,
-    restaurant: "Ocean Grill",
-    category: {
-      name: "Seafood",
-      slug: "seafood"
+    "title": "Cultural Dining at Songket Restaurant",
+    "slug": "2025/04/20/songket-restaurant-review",
+    "image": "https://static.toiimg.com/thumb/56290109/Songket-Restaurant.jpg?width=1200&height=900",
+    "date": "April 20, 2025",
+    "rating": 4,
+    "restaurant": "Songket Restaurant",
+    "category": {
+      "name": "Traditional Malaysian",
+      "slug": "traditional-malaysian"
     }
   },
   {
-    title: "Authentic Mexican Flavors at Casa Bonita",
-    slug: "2023/01/13/casa-bonita-mexican-review",
-    image: "https://ext.same-assets.com/543785121/224804076.jpeg",
-    date: "January 13, 2023",
-    rating: 4,
-    restaurant: "Casa Bonita",
-    category: {
-      name: "Mexican",
-      slug: "mexican"
+    "title": "Omakase Experience at Eat and Cook",
+    "slug": "2025/04/20/eat-and-cook-review",
+    "image": "https://media2.malaymail.com/uploads/articles/2021/2021-09/Eat_and_Cook1.jpg",
+    "date": "April 20, 2025",
+    "rating": 5,
+    "restaurant": "Eat and Cook",
+    "category": {
+      "name": "Contemporary Malaysian",
+      "slug": "contemporary-malaysian"
     }
   }
 ]
+
