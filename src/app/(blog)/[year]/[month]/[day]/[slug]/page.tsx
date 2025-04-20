@@ -68,21 +68,26 @@ export default async function RecipePage(props: {
 
   // Mock data for recipe details
   const ingredients = [
-    "1 cup Water",
-    "1 cup Sugar",
-    "1/2 cup Honey",
-    "2 Rosemary Sprigs",
-    "3 oz. Rye Whiskey",
-    "1 oz. Rosemary and Honey Simple Syrup",
-    "2 Dashes Aromatic Bitters",
-    "1 Rosemary Sprig",
-    "Orange Peel, Garnish",
+    "500g Chicken Thighs, diced",
+    "1/4 cup Soy Sauce",
+    "2 tbsp Peanut Butter",
+    "2 tbsp Honey",
+    "2 Garlic Cloves, minced",
+    "1 tsp Ground Coriander",
+    "1 tsp Turmeric Powder",
+    "1/2 tsp Chili Powder",
+    "1/4 cup Coconut Milk",
+    "Wooden Skewers, soaked in water",
+    "Peanut Sauce, for serving",
   ];
 
   const directions = [
-    "Add water, honey and sugar to a pot and bring to a boil. Once sugar dissolves, add rosemary sprigs and boil for an additional minute then lower to a simmer for 10 minutes.",
-    "Add whiskey, bitters, and rosemary & honey simple syrup into a cocktail glass and stir.",
-    "Add one large ice cube then garnish with an orange peel and rosemary sprig. Serve immediately.",
+    "In a bowl, mix soy sauce, peanut butter, honey, garlic, ground coriander, turmeric, chili powder, and coconut milk to create a marinade.",
+    "Add diced chicken thighs to the marinade and mix well. Cover and refrigerate for at least 2 hours or overnight for best results.",
+    "Preheat a grill or grill pan over medium heat.",
+    "Thread the marinated chicken pieces onto the soaked wooden skewers.",
+    "Grill the skewers for 8-10 minutes, turning occasionally, until the chicken is cooked through and slightly charred.",
+    "Serve hot with peanut sauce on the side for dipping.",
   ];
 
   // Mock data for related recipes
@@ -160,22 +165,15 @@ export default async function RecipePage(props: {
 
             <div className="text-sm text-muted-foreground mb-4">
               <span>
-                This is an example of affiliate disclosure. You can add your own
-                text here or remove it completely #sponsoredpost.
+                Grabfood #sponsoredpost.
               </span>
             </div>
 
             <div className="space-y-4">
               <p className="text-muted-foreground">{recipe.description}</p>
-              <p className="text-muted-foreground">
-                All your supporting arguments must be communicated with
-                simplicity and charm. And in such a way that the reader will
-                read on. (After all, that's a reader's job: to read, isn't it?)
-                And by the time your readers have reached this point in the
-                finished copy, you will have convinced them that you not only
-                respect their intelligence, but you also understand their needs
-                as consumers.
-              </p>
+                <p className="text-muted-foreground">
+                This recipe is not just a guide; it's an invitation to elevate your culinary skills. With every step, you'll discover flavors that captivate the senses and techniques that inspire creativity. Let this be the recipe that turns your kitchen into a stage for unforgettable moments.
+                </p>
             </div>
           </div>
 
@@ -213,7 +211,7 @@ export default async function RecipePage(props: {
                 </Avatar>
                 <div>
                   <div className="flex items-center">
-                    <span className="text-sm">by</span>
+                    <span className="text-sm mr-1">by</span>
                     <Link
                       href={`/author/${recipe.author.slug}`}
                       className="font-medium hover:text-primary ml-1"
@@ -260,7 +258,7 @@ export default async function RecipePage(props: {
             <div className="mb-8">
               <h2 className="font-heading font-semibold mb-4">Notes</h2>
               <p className="text-muted-foreground italic">
-                Recipe credit: dudethatcookz.com
+                Recipe credit: makan-sini-sana.com
               </p>
             </div>
 
@@ -313,10 +311,9 @@ export default async function RecipePage(props: {
               >
                 {recipe.author.name}
               </Link>
-              <p className="text-muted-foreground">
-                Cras mattis consectetur purus sit amet fermentum. Aenean eu leo
-                quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
-              </p>
+                <p className="text-muted-foreground">
+                  Passionate about food and storytelling, this author brings recipes to life with a touch of creativity and a dash of love for the culinary arts.
+                </p>
               <div className="flex gap-2 mt-2">
                 <Link
                   href="https://facebook.com"
@@ -347,136 +344,132 @@ export default async function RecipePage(props: {
         <div className="mb-12">
           <h2 className="section-title mb-8">Comments</h2>
 
-          <div className="space-y-6">
+            <div className="space-y-6">
             {/* Hardcoded comments with flag button */}
             <div className="flex items-start space-x-4">
               <Avatar>
-                <AvatarImage src="/avatars/user-1.png" alt="John Doe" />
-                <AvatarFallback>JD</AvatarFallback>
+              <AvatarImage src="/avatars/user-1.png" alt="John Doe" />
+              <AvatarFallback>JD</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold">John Doe</p>
-                    <p className="text-sm text-muted-foreground">
-                      May 12, 2023
-                    </p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    <span className="sr-only">Flag comment</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-flag"
-                    >
-                      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-                      <line x1="4" x2="4" y1="22" y2="15" />
-                    </svg>
-                  </Button>
-                </div>
-                <p className="mt-2">
-                  This recipe looks amazing! I tried it last weekend and
-                  everyone loved it. The rosemary adds such a nice flavor to the
-                  cocktail.
+              <div className="flex items-center justify-between">
+                <div>
+                <p className="text-sm font-semibold">John Doe</p>
+                <p className="text-sm text-muted-foreground">
+                  March 25, 2025
                 </p>
+                </div>
+                <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-primary"
+                >
+                <span className="sr-only">Flag comment</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-flag"
+                >
+                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                  <line x1="4" x2="4" y1="22" y2="15" />
+                </svg>
+                </Button>
+              </div>
+              <p className="mt-2">
+                This satay recipe is incredible! The marinade is so flavorful, and the peanut sauce is the perfect complement. My family couldn't get enough of it!
+              </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-4">
               <Avatar>
-                <AvatarImage src="/avatars/user-2.png" alt="Sarah Johnson" />
-                <AvatarFallback>SJ</AvatarFallback>
+              <AvatarImage src="/avatars/user-2.png" alt="Sarah Johnson" />
+              <AvatarFallback>SJ</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold">Sarah Johnson</p>
-                    <p className="text-sm text-muted-foreground">
-                      May 10, 2023
-                    </p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    <span className="sr-only">Flag comment</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-flag"
-                    >
-                      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-                      <line x1="4" x2="4" y1="22" y2="15" />
-                    </svg>
-                  </Button>
-                </div>
-                <p className="mt-2">
-                  I substituted bourbon for the rye whiskey and it was still
-                  delicious! Love how simple yet sophisticated this drink is.
+              <div className="flex items-center justify-between">
+                <div>
+                <p className="text-sm font-semibold">Sarah Johnson</p>
+                <p className="text-sm text-muted-foreground">
+                  April 12, 2025
                 </p>
+                </div>
+                <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-primary"
+                >
+                <span className="sr-only">Flag comment</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-flag"
+                >
+                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                  <line x1="4" x2="4" y1="22" y2="15" />
+                </svg>
+                </Button>
+              </div>
+              <p className="mt-2">
+                I tried this satay recipe for a barbecue party, and it was a hit! The chicken was tender and juicy, and the spices were just right. Will definitely make it again.
+              </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-4">
               <Avatar>
-                <AvatarImage src="/avatars/user-3.png" alt="Mike Thomas" />
-                <AvatarFallback>MT</AvatarFallback>
+              <AvatarImage src="/avatars/user-3.png" alt="Mike Thomas" />
+              <AvatarFallback>MT</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold">Mike Thomas</p>
-                    <p className="text-sm text-muted-foreground">May 8, 2023</p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    <span className="sr-only">Flag comment</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-flag"
-                    >
-                      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-                      <line x1="4" x2="4" y1="22" y2="15" />
-                    </svg>
-                  </Button>
+              <div className="flex items-center justify-between">
+                <div>
+                <p className="text-sm font-semibold">Mike Thomas</p>
+                <p className="text-sm text-muted-foreground">April 9, 2025</p>
                 </div>
-                <p className="mt-2">
-                  How long can I store the rosemary and honey simple syrup? I'd
-                  like to make a batch to keep on hand for future cocktails.
-                </p>
+                <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-primary"
+                >
+                <span className="sr-only">Flag comment</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-flag"
+                >
+                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                  <line x1="4" x2="4" y1="22" y2="15" />
+                </svg>
+                </Button>
+              </div>
+              <p className="mt-2">
+                How long can I marinate the chicken for this satay? I want to prepare it ahead of time for a dinner party. The recipe looks fantastic!
+              </p>
               </div>
             </div>
-          </div>
+            </div>
         </div>
 
         <div className="bg-muted/20 p-8 rounded-md mb-6">
