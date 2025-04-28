@@ -20,6 +20,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { cookies } from "next/headers";
+import CurrentUser from "./current-user";
 
 export function Header() {
   const { theme, setTheme } = useTheme();
@@ -27,6 +29,10 @@ export function Header() {
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
+
+  //get the current user data from cookies
+
+
 
   return (
     <header className="bg-background border-b border-border">
@@ -189,16 +195,11 @@ export function Header() {
           </div>
 
           <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="icon" className="hidden md:flex">
+            {/* <Button variant="ghost" size="icon" className="hidden md:flex">
               <Search className="h-5 w-5" />
               <span className="sr-only">Search</span>
-            </Button>
-            <Button className="bg-primary hover:bg-primary/90 flex items-center">
-              <LogIn className="h-4 w-4" />
-              <Link href="/login" >
-                Login
-              </Link>
-            </Button>
+            </Button> */}
+            <CurrentUser />
           </div>
         </div>
 

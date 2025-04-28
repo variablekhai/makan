@@ -15,11 +15,11 @@ export default function Home() {
 
       <RecipeGrid
         title="Recipes"
-        recipes={recipes.slice(0, 6)}
+        recipes={recipes.slice(0, 3)}
         viewAllLink="/recipe-index"
       />
 
-      <CategorySection />
+      {/* <CategorySection /> */}
 
       <FoodReviews />
 
