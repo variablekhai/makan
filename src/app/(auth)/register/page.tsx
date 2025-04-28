@@ -51,6 +51,7 @@ export default function RegisterPage() {
     setIsLoading(false);
     if (res.ok) {
       toast.success(result.message);
+      window.location.href = "/login";
     } else {
       toast.error(result.error || "An error occurred");
     };

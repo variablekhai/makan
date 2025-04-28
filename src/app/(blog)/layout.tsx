@@ -3,7 +3,7 @@ import "../globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Toaster } from "sonner"
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: "Makan² – Malaysian Food Blog",
@@ -22,6 +22,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
+        <Analytics />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

@@ -1,5 +1,6 @@
 import "../globals.css";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata = {
   title: "Next.js",
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Analytics />
         <Toaster position="top-right" richColors closeButton />
         {children}
       </body>
