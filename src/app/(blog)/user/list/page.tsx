@@ -74,7 +74,6 @@ export default function UserManagementPage() {
 
   useEffect(() => {
     if (data) {
-      console.log("Fetched users:", data);
       setUsers(data);
       setFilteredUsers(data);
     }
@@ -171,10 +170,10 @@ export default function UserManagementPage() {
     <div className="container-custom mx-auto py-10">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">User Management</h1>
-        <Button onClick={() => setIsAddModalOpen(true)}>
+        {/* <Button onClick={() => setIsAddModalOpen(true)}>
           <PlusIcon className="mr-2 h-4 w-4" />
           Add User
-        </Button>
+        </Button> */}
       </div>
 
       {/* Search bar */}
