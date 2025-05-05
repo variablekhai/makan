@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { use } from 'react';
+import { use } from "react";
 import useSWR, { mutate } from "swr";
 import useCurrentUser from "@/app/hooks/useCurrentUser";
 import { Spinner } from "@/components/ui/spinner";
@@ -48,9 +48,13 @@ type Input = {
   name: string;
   email: string;
   bio: string;
-}
+};
 
-export default function UserProfilePage({ params }: { params: Promise<{ id: string }> }){
+export default function UserProfilePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = use(params);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -69,14 +73,19 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
     return res.json();
   };
 
-  const { data, error, isLoading } = useSWR<User>(`/api/v1/user?id=${id}`, getUser);
+  const { data, error, isLoading } = useSWR<User>(
+    `/api/v1/user?id=${id}`,
+    getUser
+  );
 
-   const {
-      register,
-      handleSubmit,
-      formState: { errors },
-      watch,
-    } = useForm<Input>(); 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<Input>();
+
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const updateUser = async (data: Input) => {
     const res = await fetch(`/api/v1/user`, {
@@ -95,20 +104,21 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
     }
     const updatedUser = await res.json();
     return updatedUser;
-  }
+  };
 
   const onSubmit = async (data: Input) => {
+    setIsUpdating(true);
     updateUser(data)
       .then((res) => {
         mutate("/api/v1/user?id=" + id);
         setIsOpen(false);
         toast.success("User updated successfully");
-      }
-      )
+        setIsUpdating(false);
+      })
       .catch((err) => {
         toast.error("Error updating user");
-      }
-      );
+        setIsUpdating(false);
+      });
   };
 
   if (isLoading) {
@@ -141,18 +151,14 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-medium">About</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {data.bio}
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{data.bio}</p>
             </div>
 
-            { user?.id === id && (
+            {user?.id === id && (
               <div className="flex justify-end">
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="default">
-                      Edit Profile
-                    </Button>
+                    <Button variant="default">Edit Profile</Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
                     <form onSubmit={handleSubmit(onSubmit)}>
@@ -204,7 +210,21 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button type="submit">Save changes</Button>
+                        <Button
+                          className={`${
+                            isUpdating
+                              ? "bg-primary/70"
+                              : "bg-primary hover:bg-primary/90"
+                          }`}
+                          disabled={isUpdating}
+                          type="submit"
+                        >
+                          {isUpdating ? (
+                            <Spinner size="small" />
+                          ) : (
+                            <span>Save changes</span>
+                          )}
+                        </Button>
                       </DialogFooter>
                     </form>
                   </DialogContent>
@@ -216,4 +236,4 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
       </Card>
     </div>
   );
-};
+}

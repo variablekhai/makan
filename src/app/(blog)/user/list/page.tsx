@@ -28,7 +28,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { PencilIcon, TrashIcon, PlusIcon, SearchIcon } from "lucide-react";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import useSWR, { mutate } from "swr";
 import {
   Table,
@@ -39,6 +39,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 type User = {
   id: string;
@@ -117,9 +118,11 @@ export default function UserManagementPage() {
     setNewUser({ name: "", email: "", role: "author" });
   };
 
+  const [isUpdating , setIsUpdating] = useState(false);
   // Handle edit user
   const handleEditUser = async () => {
     try {
+      setIsUpdating(true);
       const res = await fetch(`/api/v1/user`, {
         method: "PUT",
         headers: {
@@ -135,17 +138,20 @@ export default function UserManagementPage() {
       mutate("/api/v1/users");
       setIsEditModalOpen(false);
       setCurrentUser(null);
+      setIsUpdating(false);
 
       toast.success("User updated successfully");
     } catch (error) {
-      console.error(error);
+      setIsUpdating(false);
       toast.error("Failed to update user. Please try again.");
     }
   };
 
+  const [isDeleting, setIsDeleting] = useState(false);
   // Handle delete user
   const handleDeleteUser = async () => {
     if (!currentUser) return;
+    setIsDeleting(true);
 
     const res = await fetch(`/api/v1/user`, {
       method: "DELETE",
@@ -156,6 +162,7 @@ export default function UserManagementPage() {
     });
 
     if (!res.ok) {
+      setIsDeleting(false);
       toast.error("Failed to delete user. Please try again.");
       return;
     }
@@ -163,6 +170,7 @@ export default function UserManagementPage() {
     mutate("/api/v1/users");
     setIsDeleteModalOpen(false);
     setCurrentUser(null);
+    setIsDeleting(false);
     toast.success("User deleted successfully");
   };
 
@@ -373,7 +381,16 @@ export default function UserManagementPage() {
             <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleEditUser}>Save Changes</Button>
+            <Button 
+            className={`w-auto ${isUpdating ? "bg-primary/70" : "bg-primary hover:bg-primary/90"}`}
+            disabled={isUpdating}
+            onClick={handleEditUser}>
+              {isUpdating ? (
+                <Spinner size="small"/>
+              ) : (
+                <span>Save Changes</span>
+              )}
+              </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -395,8 +412,13 @@ export default function UserManagementPage() {
             <AlertDialogAction
               onClick={handleDeleteUser}
               className="bg-red-600 hover:bg-red-700"
+              disabled={isDeleting}
             >
-              Delete
+              {isDeleting ? (
+                <Spinner size="small" />
+              ) : (
+                <span>Delete</span>
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
