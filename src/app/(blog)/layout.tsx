@@ -5,6 +5,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Toaster } from "sonner"
 
 export const metadata: Metadata = {
   title: "Makan² – Malaysian Food Blog",
@@ -23,6 +24,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
+        <Toaster position="top-right" richColors closeButton />
         <SpeedInsights />
         <Analytics />
         <ThemeProvider

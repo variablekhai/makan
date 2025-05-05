@@ -37,6 +37,7 @@ export default function RegisterPage() {
     const body = {
       ...rest,
       name: `${firstName} ${lastName}`,
+      avatar: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`
     };
 
     const res = await fetch("/api/v1/register", {

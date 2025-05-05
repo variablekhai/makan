@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { PencilIcon, TrashIcon, PlusIcon, SearchIcon } from "lucide-react";
 import { format } from "date-fns";
+import useSWR, { mutate } from "swr";
 import {
   Table,
   TableBody,
@@ -37,51 +38,47 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { toast } from "sonner";
 
 type User = {
   id: string;
   name: string;
   email: string;
-  role: "admin" | "author";
-  createdAt: Date;
+  role: "admin" | "author" | "";
+  bio?: string;
+  created_at?: Date;
+  updated_at?: Date;
 };
 
 export default function UserManagementPage() {
-  // Dummy data
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: "1",
-      name: "John Doe",
-      email: "john@example.com",
-      role: "admin",
-      createdAt: new Date(2023, 1, 15),
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      email: "jane@example.com",
-      role: "author",
-      createdAt: new Date(2023, 2, 20),
-    },
-    {
-      id: "3",
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      role: "author",
-      createdAt: new Date(2023, 3, 5),
-    },
-    {
-      id: "4",
-      name: "Bob Wilson",
-      email: "bob@example.com",
-      role: "admin",
-      createdAt: new Date(2023, 4, 10),
-    },
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
 
   // Search functionality
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>(users);
+
+  const getAllUsers = async (url: string) => {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch");
+    }
+    return res.json();
+  };
+
+  const { data, error } = useSWR<User[]>("/api/v1/users", getAllUsers);
+
+  useEffect(() => {
+    if (data) {
+      console.log("Fetched users:", data);
+      setUsers(data);
+      setFilteredUsers(data);
+    }
+  }, [data]);
 
   // Update filtered users when search query changes
   useEffect(() => {
@@ -114,7 +111,7 @@ export default function UserManagementPage() {
     const user: User = {
       id: (users.length + 1).toString(),
       ...newUser,
-      createdAt: new Date(),
+      created_at: new Date(),
     };
     setUsers([...users, user]);
     setIsAddModalOpen(false);
@@ -122,26 +119,52 @@ export default function UserManagementPage() {
   };
 
   // Handle edit user
-  const handleEditUser = () => {
-    if (!currentUser) return;
+  const handleEditUser = async () => {
+    try {
+      const res = await fetch(`/api/v1/user`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(currentUser),
+      });
 
-    const updatedUsers = users.map((user) =>
-      user.id === currentUser.id ? currentUser : user
-    );
+      if (!res.ok) {
+        throw new Error("Failed to update user");
+      }
 
-    setUsers(updatedUsers);
-    setIsEditModalOpen(false);
-    setCurrentUser(null);
+      mutate("/api/v1/users");
+      setIsEditModalOpen(false);
+      setCurrentUser(null);
+
+      toast.success("User updated successfully");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update user. Please try again.");
+    }
   };
 
   // Handle delete user
-  const handleDeleteUser = () => {
+  const handleDeleteUser = async () => {
     if (!currentUser) return;
 
-    const filteredUsers = users.filter((user) => user.id !== currentUser.id);
-    setUsers(filteredUsers);
+    const res = await fetch(`/api/v1/user`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: currentUser.id }),
+    });
+
+    if (!res.ok) {
+      toast.error("Failed to delete user. Please try again.");
+      return;
+    }
+    
+    mutate("/api/v1/users");
     setIsDeleteModalOpen(false);
     setCurrentUser(null);
+    toast.success("User deleted successfully");
   };
 
   return (
@@ -185,17 +208,19 @@ export default function UserManagementPage() {
                 <TableCell className="font-medium">{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
-                  <span
+                    <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                       user.role === "admin"
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-green-100 text-green-800"
+                      ? "bg-blue-100 text-blue-800"
+                      : user.role === "author"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-gray-100 text-gray-800"
                     }`}
-                  >
-                    {user.role}
-                  </span>
+                    >
+                    {user.role || "unassigned"}
+                    </span>
                 </TableCell>
-                <TableCell>{format(user.createdAt, "MMM dd, yyyy")}</TableCell>
+                <TableCell>{user.created_at ? format(user.created_at, "MMM dd, yyyy") : "N/A"}</TableCell>
                 <TableCell className="text-right">
                   <Button
                     variant="ghost"

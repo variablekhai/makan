@@ -38,18 +38,20 @@ export default function CurrentUser() {
 
     return (
         <div className="flex items-center space-x-4">
+            <Link href={`/user/${user.id}`} className="flex items-center space-x-2">
             <img
                 src={`https://ui-avatars.com/api/?name=${user.name}`}
                 alt={`${user.name}'s avatar`}
                 className="h-8 w-8 rounded-full"
             />
             <p><span className="text-slate-600">Hi, </span>{user.name}!</p>
+            </Link>
             <Button
-                onClick={handleLogout}
-                variant="ghost"
-                className="flex items-center"
+            onClick={handleLogout}
+            variant="ghost"
+            className="flex items-center"
             >
-                <LogOut className="h-4 w-4" />
+            <LogOut className="h-4 w-4" />
             </Button>
         </div>
     );
