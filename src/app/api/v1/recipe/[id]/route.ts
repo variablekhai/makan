@@ -73,9 +73,10 @@ export async function PUT(req: Request) {
     }
 }
 
-export async function DELETE({ request, params }: { request: Request, params: { id: string } }) {
+export async function DELETE(request: Request) {
     try {
-        const { id } = params;
+        const url = new URL(request.url);
+        const id = url.pathname.split('/').slice(-1)[0];
 
         const token = request.headers.get('cookie')?.split('; ').find(cookie => cookie.startsWith('token='))?.split('=')[1];
 
