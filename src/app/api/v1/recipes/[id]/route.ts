@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request) {
     try {
-        const { id } = params;
+        const url = new URL(request.url);
+        const id = url.pathname.split('/').slice(-1)[0];
 
         const token = request.headers.get('cookie')?.split('; ').find(cookie => cookie.startsWith('token='))?.split('=')[1];
 
