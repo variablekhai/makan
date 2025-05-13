@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import Link from "next/link";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -11,74 +11,99 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-  } from "@/components/ui/alert-dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import { PlusIcon, SearchIcon, PencilIcon, TrashIcon, ChefHat, Star } from "lucide-react";
-import { useState } from "react";
+import {
+  PlusIcon,
+  SearchIcon,
+  PencilIcon,
+  TrashIcon,
+  ChefHat,
+  Star,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-// Mock data for blog posts
-const mockBlogs = [
-  {
-    id: "1",
-    title: "Spicy Garlic Noodles",
-    type: "recipe",
-    difficulty: "Easy",
-    timeToMake: "30 mins",
-    createdAt: new Date("2025-03-15"),
-    published: true,
-  },
-  {
-    id: "2",
-    title: "Authentic Italian Pizza",
-    type: "recipe",
-    difficulty: "Medium",
-    timeToMake: "1 hour",
-    createdAt: new Date("2025-03-10"),
-    published: true,
-  },
-  {
-    id: "3",
-    title: "Review: Hawker Chan - Singapore",
-    type: "review",
-    rating: 4.5,
-    createdAt: new Date("2025-03-05"),
-    published: true,
-  },
-  {
-    id: "4",
-    title: "Chocolate Lava Cake",
-    type: "recipe",
-    difficulty: "Hard",
-    timeToMake: "45 mins",
-    createdAt: new Date("2025-02-28"),
-    published: false,
-  },
-];
+import useCurrentUser from "@/app/hooks/useCurrentUser";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
+import { capitalize } from "@/utils/misc";
 
 export default function MyBlogPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [currentBlog, setCurrentBlog] = useState<typeof mockBlogs[0] | null>(null);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [currentPost, setCurrentPost] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  // Filter blogs based on search query
-  const filteredBlogs = mockBlogs.filter(blog =>
-    blog.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const { user } = useCurrentUser();
+
+  const fetchPosts = async () => {
+    const response = await fetch(`/api/v1/recipes/${user?.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    console.log("Fetched posts:", data);
+    if (!response.ok) {
+      console.error("Error fetching posts:", data);
+      return [];
+    }
+
+    return data;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      if (user) {
+        const posts = await fetchPosts();
+        setPosts(posts);
+      }
+      setIsLoading(false);
+    };
+
+
+    fetchData();
+  }, [user]);
+
+  //Filter posts based on search query
+  const filteredPosts = posts.filter((post) =>
+    post.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Handle delete confirmation
   const handleDelete = (id: string | undefined) => {
-    // In a real app, you would delete the blog post here
-    console.log(`Delete blog with id: ${id}`);
+    if (!id) return;
+    fetch(`/api/v1/recipe/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          setPosts(posts.filter((post) => post.id !== id));
+          toast.success("Blog post deleted successfully");
+        } else {
+          toast.error("Failed to delete blog post");
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting blog post:", error);
+        toast.error("An error occurred while deleting the blog post");
+      });
     setIsDeleteModalOpen(false);
   };
 
@@ -86,16 +111,17 @@ export default function MyBlogPage() {
     <div className="container-custom mx-auto py-10">
       <div className="mb-8">
         <div className="flex items-center text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-primary">Home</Link>
+          <Link href="/" className="hover:text-primary">
+            Home
+          </Link>
           <span className="mx-2">/</span>
           <span>My Blog</span>
         </div>
-        
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-heading font-bold">My Blog Posts</h1>
           <Button
             className="bg-primary hover:bg-primary/90"
-            onClick={() => router.push('/blog/add')}
+            onClick={() => router.push("/blog/add")}
           >
             <PlusIcon className="mr-2 h-4 w-4" />
             Write New Blog
@@ -130,12 +156,12 @@ export default function MyBlogPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredBlogs.map((blog) => (
-              <TableRow key={blog.id}>
-                <TableCell className="font-medium">{blog.title}</TableCell>
+            {filteredPosts.map((post) => (
+              <TableRow key={post.id}>
+                <TableCell className="font-medium">{post.title}</TableCell>
                 <TableCell>
                   <div className="flex items-center">
-                    {blog.type === "recipe" ? (
+                    {post.type === "recipe" ? (
                       <>
                         <ChefHat className="h-4 w-4 mr-2 text-primary" />
                         <span>Recipe</span>
@@ -149,33 +175,36 @@ export default function MyBlogPage() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {blog.type === "recipe" ? (
+                  {post.type === "recipe" ? (
                     <span className="text-sm text-muted-foreground">
-                      {blog.difficulty} • {blog.timeToMake}
+                      {capitalize(post.difficulty)} • {post.timeToMake.value}{" "}
+                      {post.timeToMake.unit}
                     </span>
                   ) : (
                     <span className="text-sm text-muted-foreground">
-                      Rating: {blog.rating}/5
+                      Rating: {post.rating}/5
                     </span>
                   )}
                 </TableCell>
-                <TableCell>{format(blog.createdAt, "MMM dd, yyyy")}</TableCell>
+                <TableCell>
+                  {format(post.createdAt, "MMM dd, yyyy, hh:mm a")}
+                </TableCell>
                 <TableCell>
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      blog.published
+                      !post.isDraft
                         ? "bg-green-100 text-green-800"
                         : "bg-amber-100 text-amber-800"
                     }`}
                   >
-                    {blog.published ? "Published" : "Draft"}
+                    {!post.isDraft ? "Published" : "Draft"}
                   </span>
                 </TableCell>
                 <TableCell className="text-right">
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => router.push(`/blog/edit/${blog.id}`)}
+                    onClick={() => router.push(`/blog/edit/${post.id}`)}
                   >
                     <PencilIcon className="h-4 w-4" />
                     <span className="sr-only">Edit</span>
@@ -184,7 +213,7 @@ export default function MyBlogPage() {
                     variant="ghost"
                     size="icon"
                     onClick={() => {
-                      setCurrentBlog(blog);
+                      setCurrentPost(post);
                       setIsDeleteModalOpen(true);
                     }}
                   >
@@ -205,13 +234,13 @@ export default function MyBlogPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete blog post</AlertDialogTitle>
             <AlertDialogDescription>
-                Are you sure you want to delete "{currentBlog?.title}"? This action cannot be undone.
+                Are you sure you want to delete "{currentPost?.title}"? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => handleDelete(currentBlog?.id)}
+              onClick={() => handleDelete(currentPost?.id)}
               className="bg-red-600 hover:bg-red-700"
             >
               Delete
@@ -221,7 +250,12 @@ export default function MyBlogPage() {
       </AlertDialog>
       )}
 
-      {filteredBlogs.length === 0 && (
+      {isLoading && (
+        <div className="flex justify-center">
+          <Spinner />
+        </div>
+      )}
+      {!isLoading && filteredPosts.length === 0 && 
         <div className="text-center py-12">
           <div className="mb-4 text-muted-foreground">
             <PlusIcon className="h-12 w-12 mx-auto" />
@@ -240,7 +274,7 @@ export default function MyBlogPage() {
             </Button>
           )}
         </div>
-      )}
+      }
     </div>
   );
 }
