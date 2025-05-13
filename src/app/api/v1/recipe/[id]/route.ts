@@ -73,7 +73,7 @@ export async function PUT(req: Request) {
     }
 }
 
-export async function DELETE({ params, request }: { params: { id: string }, request: Request }) {
+export async function DELETE({ request, params }: { request: Request, params: { id: string } }) {
     try {
         const { id } = params;
 
