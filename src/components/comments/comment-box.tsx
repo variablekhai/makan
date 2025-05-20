@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import useCurrentUser from "@/app/hooks/useCurrentUser";
 import { toast } from "sonner";
+import Link from "next/link";
 
 interface Comment {
   id: string;
@@ -189,16 +190,12 @@ export default function CommentBox({
           </h2>
           <p className="text-muted-foreground mb-6">
             You must be logged in to leave a comment. Please{" "}
-            <a
+            <Link
               href="/login"
               className="text-primary hover:underline"
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = "/login";
-              }}
             >
               log in
-            </a>{" "}
+            </Link>{" "}
           </p>
         </div>
       )}

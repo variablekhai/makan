@@ -21,11 +21,13 @@ export const dynamic = "force-static";
 export const dynamicParams = false;
 
 // Define the structure of the page parameters
-type RecipeParams = {
-  year: string;
-  month: string;
-  day: string;
-  slug: string;
+type RecipePageParams = {
+  params: {
+    year: string;
+    month: string;
+    day: string;
+    slug: string;
+  };
 };
 
 async function fetchRecipes(): Promise<Recipe[]> {
@@ -43,8 +45,12 @@ export async function generateStaticParams() {
     return { year, month, day, slug };
   });
 }
+
 // Recipe page component
-export default async function RecipePage({ params }: { params: RecipeParams }) {
+export default async function RecipePage(props: {
+  params: Promise<RecipePageParams["params"]>;
+}) {
+  const params = await props.params;
   if (!params.year || !params.month || !params.day || !params.slug) {
     throw new Error("A required parameter was not provided as a string");
   }
