@@ -1,14 +1,53 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Facebook, Instagram, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/v1/newsletter/subscriber", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          preferences: ["promotions", "updates"], // Default preferences
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to subscribe.");
+      }
+
+      toast.success("Successfully subscribed to the newsletter!");
+      setEmail(""); // Clear the input field
+    } catch (error: any) {
+      toast.error(error.message || "An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <footer className="bg-background pt-16 border-t border-border">
@@ -28,16 +67,26 @@ export function Footer() {
             <p className="text-white text-lg mb-6">
               Sign up with your email address to receive new recipes each week.
             </p>
-            <div className="flex space-x-2 max-w-md mx-auto">
+            <form
+              className="flex space-x-2 max-w-md mx-auto"
+              onSubmit={handleSubscribe}
+            >
               <Input
                 type="email"
                 placeholder="Type your email"
                 className="bg-white/90 border-none"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
               />
-              <Button className="bg-primary hover:bg-primary/90">
-                Subscribe
+              <Button
+                type="submit"
+                className="bg-primary hover:bg-primary/90"
+                disabled={isLoading}
+              >
+                {isLoading ? "Subscribing..." : "Subscribe"}
               </Button>
-            </div>
+            </form>
           </div>
         </div>
 
@@ -105,18 +154,7 @@ export function Footer() {
             <p className="text-muted-foreground mb-4">
               Subscribe to our newsletter and receive new recipes in your inbox.
             </p>
-            <form className="space-y-4">
-              <div>
-                <label htmlFor="name" className="sr-only">
-                  Your name
-                </label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Your name"
-                  className="w-full bg-background"
-                />
-              </div>
+            <form className="space-y-4" onSubmit={handleSubscribe}>
               <div>
                 <label htmlFor="email" className="sr-only">
                   Email *
@@ -126,11 +164,18 @@ export function Footer() {
                   type="email"
                   placeholder="Email *"
                   className="w-full bg-background"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
+                  disabled={isLoading}
                 />
               </div>
-              <Button className="w-full bg-primary hover:bg-primary/90">
-                Subscribe!
+              <Button
+                type="submit"
+                className="w-full bg-primary hover:bg-primary/90"
+                disabled={isLoading}
+              >
+                {isLoading ? "Subscribing..." : "Subscribe!"}
               </Button>
             </form>
           </div>
