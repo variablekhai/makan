@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cookies } from "next/headers";
 import CurrentUser from "./current-user";
+import useCurrentUser from "@/app/hooks/useCurrentUser";
 
 export function Header() {
   const { theme, setTheme } = useTheme();
@@ -30,9 +31,7 @@ export function Header() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  //get the current user data from cookies
-
-
+  const { user } = useCurrentUser();
 
   return (
     <header className="bg-background border-b border-border">
@@ -185,7 +184,7 @@ export function Header() {
                   <Link href="/blog" legacyBehavior passHref>
                     <NavigationMenuLink className="flex items-center font-medium px-4 py-2 group hover:text-primary transition-colors">
                       <BookText className="h-4 w-4 mr-2" />
-                      My Blog
+                      Write a Blog
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
@@ -195,10 +194,6 @@ export function Header() {
           </div>
 
           <div className="flex items-center space-x-3">
-            {/* <Button variant="ghost" size="icon" className="hidden md:flex">
-              <Search className="h-5 w-5" />
-              <span className="sr-only">Search</span>
-            </Button> */}
             <CurrentUser />
           </div>
         </div>
