@@ -102,12 +102,6 @@ export default function CommentsPage() {
         fetchComments();
     }, []);
 
-    // Check if a comment contains inappropriate words
-    const containsInappropriateWords = (content: string) => {
-        const lowerContent = content.toLowerCase();
-        return inappropriateWords.some(word => lowerContent.includes(word.toLowerCase()));
-    };
-
     // Filter comments based on search query, status, and content appropriateness
     const filteredComments = comments.filter((comment) => {
         const matchesSearch = 
