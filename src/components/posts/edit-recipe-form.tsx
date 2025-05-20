@@ -26,6 +26,7 @@ interface Recipe {
   title: string;
   description: string;
   type: string;
+  category: string;
   difficulty: string;
   timeToMake: TimeToMake;
   imageUrl: string | null;
@@ -35,6 +36,7 @@ interface Recipe {
   isDraft: boolean;
   isFeatured: boolean;
   authorId: string;
+  slug: string;
   createdAt: string;
 }
 
@@ -71,12 +73,14 @@ export default function EditRecipeForm({ post }: { post: Recipe }) {
       title: post.title,
       description: post.description,
       type: post.type,
+      category: post.category,
       difficulty: post.difficulty,
       timeToMake: { value: post.timeToMake.value, unit: post.timeToMake.unit },
       directions: post.directions.map((direction) => ({ value: direction })),
       ingredients: post.ingredients.map((ingredient) => ({
         value: ingredient,
       })),
+      slug: post.slug,
       notes: post.notes,
       isDraft: post.isDraft,
       isFeatured: post.isFeatured,
@@ -139,6 +143,17 @@ export default function EditRecipeForm({ post }: { post: Recipe }) {
       ingredients: data.ingredients.map((i: { value: string }) => i.value),
       createdAt: post.createdAt,
       updatedAt: new Date().toISOString(),
+      slug: (() => {
+        const createdAtDate = new Date(post.createdAt);
+        const year = createdAtDate.getFullYear();
+        const month = String(createdAtDate.getMonth() + 1).padStart(2, "0");
+        const day = String(createdAtDate.getDate()).padStart(2, "0");
+        const titleSlug = data.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+        return `${year}/${month}/${day}/${titleSlug}`;
+        })(),
     };
 
     const handlePostUpdate = async (imageUrl?: string) => {
@@ -375,6 +390,43 @@ export default function EditRecipeForm({ post }: { post: Recipe }) {
             {errors.timeToMake?.value && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.timeToMake.value.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="col-span-1">
+            <Label
+              htmlFor="category"
+              className="block text-sm font-medium mb-2"
+            >
+              Category
+            </Label>
+            <Controller
+              control={control}
+              name="category"
+              render={({ field }) => (
+                <Select
+                  defaultValue={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="w-full border border-border bg-background">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="main">Main</SelectItem>
+                    <SelectItem value="appetizers">Appetizers</SelectItem>
+                    <SelectItem value="soups">Soups</SelectItem>
+                    <SelectItem value="desserts">Desserts</SelectItem>
+                    <SelectItem value="drinks">Drinks</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.category && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.category.message}
               </p>
             )}
           </div>

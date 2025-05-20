@@ -16,26 +16,6 @@ import {
 import { toast } from "sonner";
 import { Spinner } from "../ui/spinner";
 
-type TimeToMake = {
-  value: number;
-  unit: string;
-};
-
-interface Recipe {
-  title: string;
-  description: string;
-  type: string;
-  difficulty: string;
-  timeToMake: TimeToMake;
-  imageUrl: File | null;
-  directions: string[];
-  ingredients: string[];
-  notes: string;
-  isDraft: boolean;
-  isFeatured: boolean;
-  authorId: string;
-}
-
 export default function RecipeForm({ userId }: { userId: string | undefined }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +30,7 @@ export default function RecipeForm({ userId }: { userId: string | undefined }) {
       title: "",
       description: "",
       type: "recipe",
+      category: "",
       difficulty: "",
       timeToMake: { value: 0, unit: "minutes" },
       imageUrl: null,
@@ -107,8 +88,19 @@ export default function RecipeForm({ userId }: { userId: string | undefined }) {
       ...data,
       directions: data.directions.map((item: { value: string }) => item.value),
       ingredients: data.ingredients.map(
-        (item: { value: string }) => item.value
+      (item: { value: string }) => item.value
       ),
+      slug: (() => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      const titleSlug = data.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      return `${year}/${month}/${day}/${titleSlug}`;
+      })(),
     };
 
     if (userId) {
@@ -354,6 +346,43 @@ export default function RecipeForm({ userId }: { userId: string | undefined }) {
             {errors.timeToMake?.value && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.timeToMake.value.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="col-span-1">
+            <Label
+              htmlFor="category"
+              className="block text-sm font-medium mb-2"
+            >
+              Category
+            </Label>
+            <Controller
+              control={control}
+              name="category"
+              render={({ field }) => (
+                <Select
+                  defaultValue={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="w-full border border-border bg-background">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="main">Main</SelectItem>
+                    <SelectItem value="appetizers">Appetizers</SelectItem>
+                    <SelectItem value="soups">Soups</SelectItem>
+                    <SelectItem value="desserts">Desserts</SelectItem>
+                    <SelectItem value="drinks">Drinks</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.category && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.category.message}
               </p>
             )}
           </div>

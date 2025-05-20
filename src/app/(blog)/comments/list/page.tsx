@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,8 @@ import {
     SelectTrigger, 
     SelectValue 
 } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 
 // List of inappropriate words to filter
 const inappropriateWords = [
@@ -36,53 +38,69 @@ const inappropriateWords = [
     "hate", "violent", "obscene", "profanity"
 ];
 
-// Mock data for comments
-const initialComments = [
-    {
-        id: "1",
-        author: "John Doe",
-        email: "john@example.com",
-        content: "This is a great recipe but I dont really like it :(",
-        post: "Spicy Garlic Butter Shrimp",
-        status: "approved",
-        createdAt: new Date(2023, 5, 15),
-    },
-    {
-        id: "2",
-        author: "Jane Smith",
-        email: "jane@example.com",
-        content: "I have a question about this recipe. Can I substitute butter with olive oil?",
-        post: "Summer Salad Recipes",
-        status: "pending",
-        createdAt: new Date(2023, 6, 2),
-    },
-    {
-        id: "3",
-        author: "Mike Johnson",
-        email: "mike@example.com",
-        content: "I found a typo in paragraph three. This content seems inappropriate.",
-        post: "Chocolate Chip Cookies",
-        status: "approved",
-        createdAt: new Date(2023, 6, 10),
-    },
-    {
-        id: "4",
-        author: "Sarah Williams",
-        email: "sarah@example.com",
-        content: "This didn't work for me. I followed all the steps but got an error.",
-        post: "Vegan Pasta Primavera",
-        status: "pending",
-        createdAt: new Date(2023, 6, 18),
-    },
-];
+type Comment = {
+    id: string;
+    author: {
+        name: string;
+        email: string;
+    };
+    authorId: string;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date;
+    flagCount: number;
+    isFlagged: boolean;
+    post: {
+        title: string;
+    };
+    postId: string;
+    status: string;
+};
 
 export default function CommentsPage() {
-    const [comments, setComments] = useState(initialComments);
+    const [comments, setComments] = useState<Comment[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [contentFilter, setContentFilter] = useState("all");
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        // Fetch comments from the API
+        const fetchComments = async () => {
+            try {
+                const response = await fetch("/api/v1/comments");
+                const data = await response.json();
+                const formattedComments: Comment[] = data.map((comment: any) => ({
+                    id: comment.id,
+                    author: {
+                        name: comment.author.name,
+                        email: comment.author.email,
+                    },
+                    authorId: comment.authorId,
+                    content: comment.content,
+                    createdAt: new Date(comment.createdAt),
+                    updatedAt: new Date(comment.updatedAt),
+                    flagCount: comment.flagCount,
+                    isFlagged: comment.isFlagged,
+                    post: {
+                        title: comment.post.title,
+                    },
+                    postId: comment.postId,
+                    status: comment.isFlagged ? "pending" : "approved",
+                }));
+                setComments(formattedComments);
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Failed to fetch comments:", error);
+                setIsLoading(false);
+            }
+        };
+
+        fetchComments();
+    }, []);
 
     // Check if a comment contains inappropriate words
     const containsInappropriateWords = (content: string) => {
@@ -93,59 +111,103 @@ export default function CommentsPage() {
     // Filter comments based on search query, status, and content appropriateness
     const filteredComments = comments.filter((comment) => {
         const matchesSearch = 
-            comment.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            comment.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            comment.author.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            comment.author.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
             comment.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            comment.post.toLowerCase().includes(searchQuery.toLowerCase());
+            comment.post.title.toLowerCase().includes(searchQuery.toLowerCase());
         
         const matchesStatus = 
             statusFilter === "all" || 
             comment.status === statusFilter;
         
-        const isInappropriate = containsInappropriateWords(comment.content);
         const matchesContent = 
             contentFilter === "all" || 
-            (contentFilter === "inappropriate" && isInappropriate) ||
-            (contentFilter === "appropriate" && !isInappropriate);
+            (contentFilter === "inappropriate" && comment.isFlagged) ||
+            (contentFilter === "appropriate" && !comment.isFlagged);
         
         return matchesSearch && matchesStatus && matchesContent;
     });
 
     const handleDeleteComment = () => {
         if (commentToDelete) {
-            setComments(comments.filter(comment => comment.id !== commentToDelete));
-            setCommentToDelete(null);
-            setIsDeleteDialogOpen(false);
+            fetch(`/api/v1/comment/${commentToDelete}`, {
+            method: "DELETE",
+            })
+            .then((response) => {
+                if (response.ok) {
+                    toast.success("Comment deleted successfully");
+                setComments(comments.filter(comment => comment.id !== commentToDelete));
+                } else {
+                console.error("Failed to delete comment");
+                }
+            })
+            .catch((error) => {
+                console.error("Error deleting comment:", error);
+            })
+            .finally(() => {
+                setCommentToDelete(null);
+                setIsDeleteDialogOpen(false);
+            });
         }
     };
 
-    const handleStatusToggle = (id: string, currentStatus: string) => {
-        setComments(comments.map(comment => {
-            if (comment.id === id) {
-                return {
-                    ...comment,
-                    status: currentStatus === "approved" ? "pending" : "approved"
-                };
+    const handleStatusToggle = async (id: string, currentStatus: string) => {
+        const newStatus = currentStatus === "approved" ? "pending" : "approved";
+
+        try {
+            if (newStatus === "approved") {
+                const response = await fetch(`/api/v1/comment/unflag/${id}`, {
+                    method: "PUT",
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to unflag the comment");
+                }
+            } else {
+                const response = await fetch(`/api/v1/comment/flag/${id}`, {
+                    method: "PUT",
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to flag the comment");
+                }
             }
-            return comment;
-        }));
+
+            setComments(comments.map(comment => {
+                if (comment.id === id) {
+                    return {
+                        ...comment,
+                        status: newStatus,
+                        isFlagged: newStatus === "pending" ? true : false,
+                    };
+                }
+                return comment;
+            }));
+
+            if (newStatus === "approved") {
+                toast.success("Comment approved and unflagged");
+            } else {
+                toast.success("Comment unapproved and flagged");
+            }
+        } catch (error) {
+            console.error("Error updating comment status:", error);
+            toast.error("Failed to update comment status");
+        }
     };
 
-    // Count inappropriate comments
-    const inappropriateCount = comments.filter(comment => 
-        containsInappropriateWords(comment.content)
-    ).length;
+    // Count flagged comments
+    const flaggedCount = comments.filter(comment => comment.isFlagged).length;
 
     return (
         <div className="container-custom mx-auto py-10">
             <h1 className="text-2xl font-bold mb-6">Comments Management</h1>
 
-            {inappropriateCount > 0 && (
+            {flaggedCount > 0 && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md flex items-center">
                     <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
                     <div>
                         <p className="font-medium text-red-700">
-                            {inappropriateCount} {inappropriateCount === 1 ? 'comment' : 'comments'} flagged for potentially inappropriate content
+                            {flaggedCount} {flaggedCount === 1 ? 'comment' : 'comments'} flagged for potentially inappropriate content
                         </p>
                     </div>
                 </div>
@@ -203,68 +265,79 @@ export default function CommentsPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {filteredComments.map((comment) => {
-                            const isInappropriate = containsInappropriateWords(comment.content);
-                            let rowClass = comment.status === "pending" ? "bg-yellow-50" : "";
-                            if (isInappropriate) {
-                                rowClass = "bg-red-50";
-                            }
-                            
-                            return (
-                                <TableRow key={comment.id} className={rowClass}>
-                                    <TableCell>
-                                        <div className="font-medium">{comment.author}</div>
-                                        <div className="text-xs text-gray-500">{comment.email}</div>
-                                    </TableCell>
-                                    <TableCell className="max-w-xs">
-                                        <div className="line-clamp-2">
-                                            {isInappropriate && (
-                                                <span className="inline-flex items-center mr-2 px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                                                    <AlertTriangle className="h-3 w-3 mr-1" />
-                                                    Flagged
-                                                </span>
-                                            )}
-                                            {comment.content}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>{comment.post}</TableCell>
-                                    <TableCell>{format(comment.createdAt, "MMM dd, yyyy")}</TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => handleStatusToggle(comment.id, comment.status)}
-                                                title={comment.status === "approved" ? "Unapprove" : "Approve"}
-                                            >
-                                                {comment.status === "approved" ? (
-                                                    <XCircle className="h-4 w-4 text-red-500" />
-                                                ) : (
-                                                    <CheckCircle className="h-4 w-4 text-green-500" />
-                                                )}
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => {
-                                                    setCommentToDelete(comment.id);
-                                                    setIsDeleteDialogOpen(true);
-                                                }}
-                                                title="Delete"
-                                            >
-                                                <TrashIcon className="h-4 w-4 text-red-500" />
-                                            </Button>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                        {filteredComments.length === 0 && (
+                        {isLoading ? (
                             <TableRow>
-                                <TableCell colSpan={5} className="text-center py-6 text-gray-500">
-                                    No comments found
+                                <TableCell colSpan={5} className="text-center py-6">
+                                    <div className="flex justify-center items-center">
+                                       <Spinner size="small" />
+                                    </div>
                                 </TableCell>
                             </TableRow>
+                        ) : (
+                            <>
+                                {filteredComments.map((comment) => {
+                                    let rowClass = comment.status === "pending" ? "bg-yellow-50" : "";
+                                    if (comment.isFlagged) {
+                                        rowClass = "bg-red-50";
+                                    }
+
+                                    return (
+                                        <TableRow key={comment.id} className={rowClass}>
+                                            <TableCell>
+                                                <div className="font-medium">{comment.author.name}</div>
+                                                <div className="text-xs text-gray-500">{comment.author.email}</div>
+                                            </TableCell>
+                                            <TableCell className="max-w-xs">
+                                                <div className="line-clamp-2">
+                                                    {comment.isFlagged && (
+                                                        <span className="inline-flex items-center mr-2 px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                            <AlertTriangle className="h-3 w-3 mr-1" />
+                                                            Flagged
+                                                        </span>
+                                                    )}
+                                                    {comment.content}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>{comment.post.title}</TableCell>
+                                            <TableCell>{format(comment.createdAt, "MMM dd, yyyy")}</TableCell>
+                                            <TableCell className="text-right">
+                                                <div className="flex justify-end gap-2">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => handleStatusToggle(comment.id, comment.status)}
+                                                        title={comment.status === "approved" ? "Unapprove" : "Approve"}
+                                                    >
+                                                        {comment.status === "approved" ? (
+                                                            <XCircle className="h-4 w-4 text-red-500" />
+                                                        ) : (
+                                                            <CheckCircle className="h-4 w-4 text-green-500" />
+                                                        )}
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => {
+                                                            setCommentToDelete(comment.id);
+                                                            setIsDeleteDialogOpen(true);
+                                                        }}
+                                                        title="Delete"
+                                                    >
+                                                        <TrashIcon className="h-4 w-4 text-red-500" />
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                                {filteredComments.length === 0 && (
+                                    <TableRow>
+                                        <TableCell colSpan={5} className="text-center py-6 text-gray-500">
+                                            No comments found
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </>
                         )}
                     </TableBody>
                 </Table>

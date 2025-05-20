@@ -12,45 +12,50 @@ import {
   Instagram,
   Printer,
 } from "lucide-react";
-import { recipes } from "@/data/recipes";
+import { Recipe } from "@/app/types/recipe";
+import { capitalize } from "@/utils/misc";
+import { format } from "date-fns";
+import CommentBox from "@/components/comments/comment-box";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
 
 // Define the structure of the page parameters
-type RecipePageProps = {
-  params: {
-    year: string;
-    month: string;
-    day: string;
-    slug: string;
-  };
+type RecipeParams = {
+  year: string;
+  month: string;
+  day: string;
+  slug: string;
 };
 
-// Generate static params for all recipes
-export function generateStaticParams() {
-  return recipes.map((recipe) => {
-    const [year, month, day, slug] = recipe.slug.split("/");
+async function fetchRecipes(): Promise<Recipe[]> {
+  const res = await fetch("http://localhost:3000/api/v1/recipes");
+  if (!res.ok) {
+    throw new Error("Failed to fetch recipes");
+  }
+  return res.json();
+}
+
+export async function generateStaticParams() {
+  const recipes = await fetchRecipes();
+  return recipes.map((recipe: any) => {
+    const [year, month, day, slug] = recipe.slug?.split("/") || [];
     return { year, month, day, slug };
   });
 }
-
-// Helper function to find a recipe based on URL parameters
-function findRecipe({ params }: { params: RecipePageProps["params"] }) {
-  const { year, month, day, slug } = params;
-  return recipes.find((r) => {
-    const [rYear, rMonth, rDay, rSlug] = r.slug.split("/");
-    return rYear === year && rMonth === month && rDay === day && rSlug === slug;
-  });
-}
-
 // Recipe page component
-export default async function RecipePage(props: {
-  params: Promise<RecipePageProps["params"]>;
-}) {
-  const params = await props.params;
+export default async function RecipePage({ params }: { params: RecipeParams }) {
+  if (!params.year || !params.month || !params.day || !params.slug) {
+    throw new Error("A required parameter was not provided as a string");
+  }
 
-  const recipe = findRecipe({ params });
+  const fullSlug = `${params.year}/${params.month}/${params.day}/${params.slug}`;
+  const recipes = await fetchRecipes();
+  const recipe = recipes.find((recipe: any) => recipe.slug === fullSlug);
+
+  const relatedRecipes = recipes
+    .filter((relatedRecipe: any) => relatedRecipe.slug !== fullSlug)
+    .slice(0, 4);
 
   if (!recipe) {
     return (
@@ -66,33 +71,6 @@ export default async function RecipePage(props: {
     );
   }
 
-  // Mock data for recipe details
-  const ingredients = [
-    "500g Chicken Thighs, diced",
-    "1/4 cup Soy Sauce",
-    "2 tbsp Peanut Butter",
-    "2 tbsp Honey",
-    "2 Garlic Cloves, minced",
-    "1 tsp Ground Coriander",
-    "1 tsp Turmeric Powder",
-    "1/2 tsp Chili Powder",
-    "1/4 cup Coconut Milk",
-    "Wooden Skewers, soaked in water",
-    "Peanut Sauce, for serving",
-  ];
-
-  const directions = [
-    "In a bowl, mix soy sauce, peanut butter, honey, garlic, ground coriander, turmeric, chili powder, and coconut milk to create a marinade.",
-    "Add diced chicken thighs to the marinade and mix well. Cover and refrigerate for at least 2 hours or overnight for best results.",
-    "Preheat a grill or grill pan over medium heat.",
-    "Thread the marinated chicken pieces onto the soaked wooden skewers.",
-    "Grill the skewers for 8-10 minutes, turning occasionally, until the chicken is cooked through and slightly charred.",
-    "Serve hot with peanut sauce on the side for dipping.",
-  ];
-
-  // Mock data for related recipes
-  const relatedRecipes = recipes.filter((r) => r.id !== recipe.id).slice(0, 4);
-
   return (
     <div className="py-12">
       <div className="container-custom">
@@ -103,11 +81,11 @@ export default async function RecipePage(props: {
             </Link>
             <span className="mx-2">/</span>
             <Link
-              href={`/category/${recipe.category.slug}`}
+              href={`/category/${recipe.category}`}
               className="hover:text-primary"
               legacyBehavior
             >
-              {recipe.category.name}
+              {capitalize(recipe.category) || "Uncategorized"}
             </Link>
             <span className="mx-2">/</span>
             <span>{recipe.title}</span>
@@ -155,7 +133,7 @@ export default async function RecipePage(props: {
           <div>
             <div className="relative overflow-hidden rounded-md mb-6">
               <Image
-                src={recipe.image}
+                src={recipe.imageUrl}
                 alt={recipe.title}
                 width={800}
                 height={600}
@@ -164,27 +142,29 @@ export default async function RecipePage(props: {
             </div>
 
             <div className="text-sm text-muted-foreground mb-4">
-              <span>
-                Grabfood #sponsoredpost.
-              </span>
+              <span>A little story about the recipe.</span>
             </div>
 
             <div className="space-y-4">
               <p className="text-muted-foreground">{recipe.description}</p>
-                <p className="text-muted-foreground">
-                This recipe is not just a guide; it's an invitation to elevate your culinary skills. With every step, you'll discover flavors that captivate the senses and techniques that inspire creativity. Let this be the recipe that turns your kitchen into a stage for unforgettable moments.
-                </p>
+              <p className="text-muted-foreground">
+                This recipe is not just a guide; it's an invitation to elevate
+                your culinary skills. With every step, you'll discover flavors
+                that captivate the senses and techniques that inspire
+                creativity. Let this be the recipe that turns your kitchen into
+                a stage for unforgettable moments.
+              </p>
             </div>
           </div>
 
           <div>
             <div className="mb-6">
               <Link
-                href={`/category/${recipe.category.slug}`}
+                href={`/category/${recipe.category}`}
                 className="category-badge mb-4"
                 legacyBehavior
               >
-                {recipe.category.name}
+                {capitalize(recipe.category) || "Uncategorized"}
               </Link>
 
               <h1 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -193,16 +173,18 @@ export default async function RecipePage(props: {
 
               <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
                 <Clock className="w-4 h-4" />
-                <span>{recipe.time}</span>
+                <span>
+                  {recipe.timeToMake.value} {recipe.timeToMake.unit}
+                </span>
                 <span className="mx-1">•</span>
                 <ChefHat className="w-4 h-4" />
-                <span>{recipe.difficulty}</span>
+                <span>{capitalize(recipe.difficulty)}</span>
               </div>
 
               <div className="flex items-center space-x-3 mb-8">
                 <Avatar>
                   <AvatarImage
-                    src={recipe.author.image}
+                    src={`https://ui-avatars.com/api/?name=${recipe.author.name}`}
                     alt={recipe.author.name}
                   />
                   <AvatarFallback>
@@ -213,14 +195,18 @@ export default async function RecipePage(props: {
                   <div className="flex items-center">
                     <span className="text-sm mr-1">by</span>
                     <Link
-                      href={`/author/${recipe.author.slug}`}
+                      href={`/author`}
                       className="font-medium hover:text-primary ml-1"
                       legacyBehavior
                     >
                       {recipe.author.name}
                     </Link>
                   </div>
-                  <p className="text-sm text-muted-foreground">{recipe.date}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {recipe.createdAt
+                      ? format(recipe.createdAt, "MMM dd, yyyy, hh:mm a ")
+                      : "N/A"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -229,7 +215,7 @@ export default async function RecipePage(props: {
               <h2 className="font-heading font-semibold mb-4">Ingredients</h2>
 
               <div className="space-y-2">
-                {ingredients.map((ingredient, index) => (
+                {recipe.ingredients.map((ingredient, index) => (
                   <div key={index} className="flex items-start">
                     <div className="flex-shrink-0 mt-1 mr-2 w-4 h-4 border border-primary/30 rounded-sm"></div>
                     <span>{ingredient}</span>
@@ -242,7 +228,7 @@ export default async function RecipePage(props: {
               <h2 className="font-heading font-semibold mb-4">Directions</h2>
 
               <div className="space-y-4">
-                {directions.map((step, index) => (
+                {recipe.directions.map((step, index) => (
                   <div key={index} className="flex">
                     <div className="flex-shrink-0 mr-4">
                       <div className="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center font-semibold">
@@ -258,7 +244,7 @@ export default async function RecipePage(props: {
             <div className="mb-8">
               <h2 className="font-heading font-semibold mb-4">Notes</h2>
               <p className="text-muted-foreground italic">
-                Recipe credit: makan-sini-sana.com
+                {recipe.notes || "No additional notes provided."}
               </p>
             </div>
 
@@ -297,271 +283,18 @@ export default async function RecipePage(props: {
 
         <Separator className="my-12" />
 
-        <div className="mb-12">
-          <div className="flex items-center space-x-3 mb-8">
-            <Avatar className="w-16 h-16">
-              <AvatarImage src={recipe.author.image} alt={recipe.author.name} />
-              <AvatarFallback>{recipe.author.name.slice(0, 2)}</AvatarFallback>
-            </Avatar>
-            <div>
-              <Link
-                href={`/author/${recipe.author.slug}`}
-                className="font-heading font-semibold text-lg hover:text-primary"
-                legacyBehavior
-              >
-                {recipe.author.name}
-              </Link>
-                <p className="text-muted-foreground">
-                  Passionate about food and storytelling, this author brings recipes to life with a touch of creativity and a dash of love for the culinary arts.
-                </p>
-              <div className="flex gap-2 mt-2">
-                <Link
-                  href="https://facebook.com"
-                  className="text-muted-foreground hover:text-primary"
-                  legacyBehavior
-                >
-                  <Facebook size={16} />
-                </Link>
-                <Link
-                  href="https://twitter.com"
-                  className="text-muted-foreground hover:text-primary"
-                  legacyBehavior
-                >
-                  <Twitter size={16} />
-                </Link>
-                <Link
-                  href="https://instagram.com"
-                  className="text-muted-foreground hover:text-primary"
-                  legacyBehavior
-                >
-                  <Instagram size={16} />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mb-12">
-          <h2 className="section-title mb-8">Comments</h2>
-
-            <div className="space-y-6">
-            {/* Hardcoded comments with flag button */}
-            <div className="flex items-start space-x-4">
-              <Avatar>
-              <AvatarImage src="/avatars/user-1.png" alt="John Doe" />
-              <AvatarFallback>JD</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <div>
-                <p className="text-sm font-semibold">John Doe</p>
-                <p className="text-sm text-muted-foreground">
-                  March 25, 2025
-                </p>
-                </div>
-                <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-primary"
-                >
-                <span className="sr-only">Flag comment</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-flag"
-                >
-                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-                  <line x1="4" x2="4" y1="22" y2="15" />
-                </svg>
-                </Button>
-              </div>
-              <p className="mt-2">
-                This satay recipe is incredible! The marinade is so flavorful, and the peanut sauce is the perfect complement. My family couldn't get enough of it!
-              </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <Avatar>
-              <AvatarImage src="/avatars/user-2.png" alt="Sarah Johnson" />
-              <AvatarFallback>SJ</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <div>
-                <p className="text-sm font-semibold">Sarah Johnson</p>
-                <p className="text-sm text-muted-foreground">
-                  April 12, 2025
-                </p>
-                </div>
-                <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-primary"
-                >
-                <span className="sr-only">Flag comment</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-flag"
-                >
-                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-                  <line x1="4" x2="4" y1="22" y2="15" />
-                </svg>
-                </Button>
-              </div>
-              <p className="mt-2">
-                I tried this satay recipe for a barbecue party, and it was a hit! The chicken was tender and juicy, and the spices were just right. Will definitely make it again.
-              </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <Avatar>
-              <AvatarImage src="/avatars/user-3.png" alt="Mike Thomas" />
-              <AvatarFallback>MT</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <div>
-                <p className="text-sm font-semibold">Mike Thomas</p>
-                <p className="text-sm text-muted-foreground">April 9, 2025</p>
-                </div>
-                <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-primary"
-                >
-                <span className="sr-only">Flag comment</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-flag"
-                >
-                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-                  <line x1="4" x2="4" y1="22" y2="15" />
-                </svg>
-                </Button>
-              </div>
-              <p className="mt-2">
-                How long can I marinate the chicken for this satay? I want to prepare it ahead of time for a dinner party. The recipe looks fantastic!
-              </p>
-              </div>
-            </div>
-            </div>
-        </div>
-
-        <div className="bg-muted/20 p-8 rounded-md mb-6">
-          <h2 className="text-2xl font-heading font-semibold mb-4">
-            Leave a Comment
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            Your email address will not be published. Required fields are marked
-            *
-          </p>
-
-          <form className="space-y-4">
-            <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-              <div className="flex-1">
-                <label htmlFor="comment" className="sr-only">
-                  Message
-                </label>
-                <textarea
-                  id="comment"
-                  rows={6}
-                  placeholder="Message"
-                  className="w-full p-3 border border-border rounded-md bg-background"
-                ></textarea>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label htmlFor="name" className="sr-only">
-                  Name *
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  placeholder="Name *"
-                  required
-                  className="w-full p-3 border border-border rounded-md bg-background"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="sr-only">
-                  Email Address *
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="Email Address *"
-                  required
-                  className="w-full p-3 border border-border rounded-md bg-background"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="website" className="sr-only">
-                  Website
-                </label>
-                <input
-                  id="website"
-                  type="text"
-                  placeholder="Website"
-                  className="w-full p-3 border border-border rounded-md bg-background"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" />
-                <span className="text-sm">
-                  Save my name, email, and website in this browser for the next
-                  time I comment.
-                </span>
-              </label>
-            </div>
-
-            <Button className="bg-primary hover:bg-primary/90">
-              Post Comment
-            </Button>
-          </form>
-        </div>
+        <CommentBox postId={recipe.id} comments={recipe.comments} />
 
         <div className="mb-12">
           <h2 className="section-title mb-8">Related</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {relatedRecipes.map((relatedRecipe) => (
+            {relatedRecipes.map((relatedRecipe: Recipe) => (
               <div key={relatedRecipe.id} className="group">
                 <div className="relative overflow-hidden rounded-md mb-4">
                   <Link href={`/${relatedRecipe.slug}`} legacyBehavior>
                     <Image
-                      src={relatedRecipe.image}
+                      src={relatedRecipe.imageUrl}
                       alt={relatedRecipe.title}
                       width={300}
                       height={225}
@@ -569,11 +302,11 @@ export default async function RecipePage(props: {
                     />
                   </Link>
                   <Link
-                    href={`/category/${relatedRecipe.category.slug}`}
+                    href={`/category/${recipe.category}`}
                     className="absolute top-2 left-2 category-badge text-xs"
                     legacyBehavior
                   >
-                    {relatedRecipe.category.name}
+                    {capitalize(relatedRecipe.category) || "Uncategorized"}
                   </Link>
                 </div>
 
