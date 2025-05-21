@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   // Example: Check for a session token in cookies
-  const token = request.cookies.get("authToken")?.value;
+  const token = request.headers.get('cookie')?.split('; ').find(cookie => cookie.startsWith('token='))?.split('=')[1];
 
   // If no token is found, redirect to login
   if (!token) {
