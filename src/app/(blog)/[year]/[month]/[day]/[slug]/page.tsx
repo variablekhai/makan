@@ -31,7 +31,13 @@ type RecipePageParams = {
 };
 
 async function fetchRecipes(): Promise<Recipe[]> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/v1/recipes`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/v1/recipes`,
+    {
+      headers: {
+        "Cache-Control": "no-store",
+      }
+    }
+  );
   if (!res.ok) {
     throw new Error("Failed to fetch recipes");
   }
