@@ -11,14 +11,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Optionally, validate the token or fetch user data
-  const user = await fetchUserFromToken(token);
+  // // Optionally, validate the token or fetch user data
+  // const user = await fetchUserFromToken(token);
 
-  // If the user is not valid or doesn't have the required role, redirect
-  if (!user || user.role !== "admin") {
-    const loginUrl = new URL("/login", request.url);
-    return NextResponse.redirect(loginUrl);
-  }
+  // // If the user is not valid or doesn't have the required role, redirect
+  // if (!user || user.role !== "admin") {
+  //   const loginUrl = new URL("/login", request.url);
+  //   return NextResponse.redirect(loginUrl);
+  // }
 
   // Allow the request to proceed
   return NextResponse.next();
