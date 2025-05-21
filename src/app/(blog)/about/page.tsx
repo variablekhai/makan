@@ -93,19 +93,19 @@ const authors = [
   },
   {
     name: "Nur Athirah",
-    image: "https://i0.wp.com/demo.wpzoom.com/Makan²/files/2022/04/Ellipse-6.png",
+    image: "/images/athirah.jpeg",
     link: "https://demo.wpzoom.com/Makan²/author/erikbrown/",
     notes: "Pastry chef exploring the fusion of Western desserts with Asian flavors. Passionate about making baking accessible to home cooks."
   },
   {
     name: "Nur Izzah",
-    image: "https://i0.wp.com/demo.wpzoom.com/Makan²/files/2022/04/Ellipse-9.png",
+    image: "/images/izzah.jpeg",
     link: "https://demo.wpzoom.com/Makan²/author/erikbrown/",
     notes: "Street food connoisseur documenting hidden culinary gems across Malaysia. Advocates for preserving traditional cooking techniques."
   },
   {
     name: "Turki",
-    image: "https://i0.wp.com/demo.wpzoom.com/Makan²/files/2022/04/Ellipse-8.png",
+    image: "/images/turki.jpeg",
     link: "https://demo.wpzoom.com/Makan²/author/erikbrown/",
     notes: "International chef bringing global influences to Malaysian cuisine. Specializes in seafood dishes and sustainable cooking practices."
   }
