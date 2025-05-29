@@ -1,6 +1,6 @@
 "use client";
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
@@ -8,6 +8,7 @@ import useCurrentUser from "@/app/hooks/useCurrentUser";
 import { toast } from "sonner";
 import Link from "next/link";
 import { Trash2Icon, TrashIcon } from "lucide-react";
+import useSWR, { mutate } from "swr";
 
 interface Comment {
   id: string;
@@ -30,19 +31,45 @@ interface FormData {
   content: string;
 }
 
-export default function CommentBox({
-  comments: initialComments,
-  postId,
-}: CommentBoxProps & { postId: string }) {
-  const [comments, setComments] = useState<Comment[]>(initialComments);
+export default function CommentBox({ postId }: { postId: string }) {
+  const [comments, setComments] = useState<Comment[]>([]);
   const { register, handleSubmit, reset } = useForm<FormData>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
 
   const { user } = useCurrentUser();
 
+  const fetcher = async (url: string) => {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch comments");
+    }
+    return response.json();
+  };
+
+  const { data: commentsData, error, isLoading } = useSWR<Comment[]>(
+    `/api/v1/comments/post/${postId}`,
+    fetcher
+  );
+
+  useEffect(() => {
+    if (commentsData) {
+      setComments(commentsData);
+    }
+  }, [commentsData]);
+
+  if (error) {
+    console.error("Error fetching comments:", error);
+    toast.error("Failed to load comments. Please try again later.");
+  }
+
   const onSubmit = async (data: FormData) => {
     try {
-      setIsLoading(true);
+      setIsLoadingSubmit(true);
       const response = await fetch("/api/v1/comment", {
         method: "POST",
         headers: {
@@ -57,11 +84,11 @@ export default function CommentBox({
       }
 
       const newComment: Comment = await response.json();
-      setComments((prevComments) => [newComment, ...prevComments]);
-      setIsLoading(false);
+      setComments((prevComments) => [...prevComments, newComment]);
+      setIsLoadingSubmit(false);
       reset();
     } catch (error) {
-      setIsLoading(false);
+      setIsLoadingSubmit(false);
       console.error("Error posting comment:", error);
     }
   };
@@ -82,6 +109,7 @@ export default function CommentBox({
       setComments((prevComments) =>
         prevComments.filter((comment) => comment.id !== commentId)
       );
+      mutate(`/api/v1/comments/post/${postId}`); // Revalidate comments
     } catch (error) {
       toast.error("Error flagging comment. Please try again.");
       console.error("Error flagging comment:", error);
@@ -116,71 +144,76 @@ export default function CommentBox({
     <div className="mb-12">
       <h2 className="section-title mb-8">Comments</h2>
       <div className="space-y-6">
-        {comments.length === 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center">
+            <Spinner size="large" />
+          </div>
+        ) : comments.length === 0 ? (
           <p className="text-muted-foreground">
             There is no comment yet, be the first to comment.
           </p>
         ) : (
           comments
             .filter((comment) => !comment.isFlagged)
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .map((comment) => (
               <div key={comment.id} className="flex items-start space-x-4">
-                <div>
-                  <img
-                    src={`https://ui-avatars.com/api/?name=${comment.author.name}`}
-                    alt={comment.author.name}
-                    className="w-10 h-10 rounded-full"
-                  />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-semibold">
-                        {comment.author.name}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {comment.createdAt
-                          ? format(
-                              new Date(comment.createdAt),
-                              "MMM dd, yyyy, hh:mm a"
-                            )
-                          : "N/A"}
-                      </p>
-                    </div>
-                    {comment.authorId === user?.id ? (
-                      <button
-                        className="text-muted-foreground hover:text-red-500"
-                        aria-label="Delete comment"
-                        onClick={() => handleDeleteComment(comment.id)}
-                      >
-                        <Trash2Icon className="w-4 h-4" />
-                      </button>
-                    ) : (
-                      <button
-                        className="text-muted-foreground hover:text-primary"
-                        aria-label="Flag comment"
-                        onClick={() => handleFlagComment(comment.id)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-flag"
-                        >
-                          <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-                          <line x1="4" x2="4" y1="22" y2="15" />
-                        </svg>
-                      </button>
-                    )}
-                  </div>
-                  <p className="mt-2">{comment.content}</p>
-                </div>
+          <div>
+            <img
+              src={`https://ui-avatars.com/api/?name=${comment.author.name}`}
+              alt={comment.author.name}
+              className="w-10 h-10 rounded-full"
+            />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold">
+            {comment.author.name}
+                </p>
+                <p className="text-sm text-muted-foreground">
+            {comment.createdAt
+              ? format(
+                  new Date(comment.createdAt),
+                  "MMM dd, yyyy, hh:mm a"
+                )
+              : "N/A"}
+                </p>
+              </div>
+              {comment.authorId === user?.id ? (
+                <button
+            className="text-muted-foreground hover:text-red-500"
+            aria-label="Delete comment"
+            onClick={() => handleDeleteComment(comment.id)}
+                >
+            <Trash2Icon className="w-4 h-4" />
+                </button>
+              ) : (
+                <button
+            className="text-muted-foreground hover:text-primary"
+            aria-label="Flag comment"
+            onClick={() => handleFlagComment(comment.id)}
+                >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-flag"
+            >
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+              <line x1="4" x2="4" y1="22" y2="15" />
+            </svg>
+                </button>
+              )}
+            </div>
+            <p className="mt-2">{comment.content}</p>
+          </div>
               </div>
             ))
         )}
@@ -213,12 +246,12 @@ export default function CommentBox({
 
             <Button
               className={`w-auto ${
-                isLoading ? "bg-primary/70" : "bg-primary hover:bg-primary/90"
+                isLoadingSubmit ? "bg-primary/70" : "bg-primary hover:bg-primary/90"
               }`}
-              disabled={isLoading}
+              disabled={isLoadingSubmit}
               type="submit"
             >
-              {isLoading ? <Spinner size="small" /> : "Post Comment"}
+              {isLoadingSubmit ? <Spinner size="small" /> : "Post Comment"}
             </Button>
           </form>
         </div>

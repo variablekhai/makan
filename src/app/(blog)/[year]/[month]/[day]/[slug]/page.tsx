@@ -295,7 +295,7 @@ export default async function RecipePage(props: {
 
         <Separator className="my-12" />
 
-        <CommentBox postId={recipe.id} comments={recipe.comments} />
+        <CommentBox postId={recipe.id} />
 
         <div className="mb-12">
           <h2 className="section-title mb-8">Related</h2>
