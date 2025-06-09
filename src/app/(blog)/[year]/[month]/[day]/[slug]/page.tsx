@@ -17,8 +17,7 @@ import { capitalize } from "@/utils/misc";
 import { format } from "date-fns";
 import CommentBox from "@/components/comments/comment-box";
 
-export const dynamic = "force-static";
-export const dynamicParams = false;
+export const dynamic = "force-dynamic";
 
 // Define the structure of the page parameters
 type RecipePageParams = {
