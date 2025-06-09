@@ -88,18 +88,18 @@ export default function RecipeForm({ userId }: { userId: string | undefined }) {
       ...data,
       directions: data.directions.map((item: { value: string }) => item.value),
       ingredients: data.ingredients.map(
-      (item: { value: string }) => item.value
+        (item: { value: string }) => item.value
       ),
       slug: (() => {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const day = String(now.getDate()).padStart(2, "0");
-      const titleSlug = data.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-      return `${year}/${month}/${day}/${titleSlug}`;
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        const titleSlug = data.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+        return `${year}/${month}/${day}/${titleSlug}`;
       })(),
     };
 
@@ -173,10 +173,7 @@ export default function RecipeForm({ userId }: { userId: string | undefined }) {
       </div>
 
       <div className="mb-8">
-        <Label
-          htmlFor="imageUrl"
-          className="block text-sm font-medium mb-2"
-        >
+        <Label htmlFor="imageUrl" className="block text-sm font-medium mb-2">
           Featured Image
         </Label>
         <img
@@ -185,63 +182,58 @@ export default function RecipeForm({ userId }: { userId: string | undefined }) {
           alt="Current featured image"
           className="w-full h-64 object-cover rounded mb-4 hidden"
         />
-        <div className="border border-dashed border-border rounded-md p-8 text-center bg-muted/20">
-          <div className="space-y-2">
-            <div className="flex items-center justify-center">
-              <svg
-                className="w-10 h-10 text-muted-foreground"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                ></path>
-              </svg>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              <label
-                htmlFor="file-upload"
-                className="relative cursor-pointer rounded-md bg-background font-medium text-primary hover:underline"
-              >
-                <span>Upload a file</span>
-                <input
-                  id="imageUrl"
-                  type="file"
-                  className="sr-only"
-                  accept="image/*"
-                  {...register("imageUrl", {
-                    required: "Featured image is required",
-                  })}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        const previewElement =
-                          document.getElementById("image-preview");
-                        if (previewElement) {
-                          previewElement.setAttribute(
-                            "src",
-                            reader.result as string
-                          );
-                          previewElement.style.display = "block";
-                        }
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                />
-              </label>
-              <p>or drag and drop</p>
-            </div>
-            <p className="text-xs text-muted-foreground">PNG, JPG up to 5MB</p>
+        <label
+          htmlFor="imageUrl"
+          className="border border-dashed border-border rounded-md p-8 text-center bg-muted/20 cursor-pointer flex flex-col items-center justify-center space-y-2"
+        >
+          <div className="flex items-center justify-center">
+            <svg
+              className="w-10 h-10 text-muted-foreground"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              ></path>
+            </svg>
           </div>
-        </div>
+          <div className="text-sm text-muted-foreground">
+            <span className="rounded-md bg-background font-medium text-primary hover:underline">
+              Upload a file
+            </span>
+            <p>or drag and drop</p>
+          </div>
+          <p className="text-xs text-muted-foreground">PNG, JPG up to 5MB</p>
+          <input
+            id="imageUrl"
+            type="file"
+            className="sr-only"
+            accept="image/*"
+            {...register("imageUrl", {
+              required: "Featured image is required",
+            })}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  const previewElement =
+                    document.getElementById("image-preview");
+                  if (previewElement) {
+                    previewElement.setAttribute("src", reader.result as string);
+                    previewElement.style.display = "block";
+                  }
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+          />
+        </label>
         {errors.imageUrl && (
           <p className="text-red-500 text-sm mt-1">{errors.imageUrl.message}</p>
         )}
