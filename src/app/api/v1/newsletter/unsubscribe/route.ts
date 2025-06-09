@@ -5,19 +5,9 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        const token = request.headers
-            .get("cookie")
-            ?.split("; ")
-            .find((cookie) => cookie.startsWith("token="))
-            ?.split("=")[1];
-
         const headers: HeadersInit = {
             "Content-Type": "application/json",
         };
-
-        if (token) {
-            headers.Authorization = `Bearer ${token}`;
-        }
 
         const response = await fetch(
             `${process.env.NEXT_API_URL}/api/newsletter/unsubscribe`,

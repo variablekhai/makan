@@ -40,7 +40,7 @@ export function Footer() {
         throw new Error(errorData.error || "Failed to subscribe.");
       }
 
-      toast.success("Successfully subscribed to the newsletter!");
+      toast.success("Successfully subscribed to the newsletter, Confirmation email sent!");
       setEmail(""); // Clear the input field
     } catch (error: any) {
       toast.error(error.message || "An error occurred. Please try again.");

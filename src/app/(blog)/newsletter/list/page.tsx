@@ -177,7 +177,7 @@ export default function NewsletterSubscribersPage() {
     (sub: any) => sub.status === "active"
   ).length;
   const inactiveCount = subscribers.filter(
-    (sub: any) => sub.status === "inactive"
+    (sub: any) => sub.status === "unsubscribed"
   ).length;
   const bouncedCount = subscribers.filter(
     (sub: any) => sub.status === "bounced"
@@ -238,7 +238,7 @@ export default function NewsletterSubscribersPage() {
           <SelectContent>
             <SelectItem value="all">All Statuses</SelectItem>
             <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value="unsubscribed">Inactive</SelectItem>
             <SelectItem value="bounced">Bounced</SelectItem>
           </SelectContent>
         </Select>
