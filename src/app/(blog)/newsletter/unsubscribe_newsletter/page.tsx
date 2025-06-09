@@ -1,14 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
 const UnsubscribeNewsletterPage = () => {
     const [isUnsubscribed, setIsUnsubscribed] = useState(false);
-    const searchParams = new URLSearchParams(window.location.search);
-    const id = searchParams.get("id");
-    const email = searchParams.get("email");
+    const [id, setId] = useState<string | null>(null);
+    const [email, setEmail] = useState<string | null>(null);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        setId(searchParams.get("id"));
+        setEmail(searchParams.get("email"));
+    }, []);
 
     const unsubscribe = async () => {
         if (!id || !email) {

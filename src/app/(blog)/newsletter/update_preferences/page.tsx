@@ -1,11 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 export default function UpdatePreferencesPage() {
-    const searchParams = new URLSearchParams(window.location.search);
-    const email = searchParams.get("email");
+    const [id, setId] = useState<string | null>(null);
+    const [email, setEmail] = useState<string | null>(null);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        setId(searchParams.get("id"));
+        setEmail(searchParams.get("email"));
+    }, []);
+    
     const [preferences, setPreferences] = useState<string[]>([]);
     const [isSaving, setIsSaving] = useState(false);
 
