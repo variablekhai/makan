@@ -73,20 +73,31 @@ export default function CommentsPage() {
             try {
                 const response = await fetch("/api/v1/comments");
                 const data = await response.json();
-                const formattedComments: Comment[] = data.map((comment: any) => ({
+                
+                // Check if data is an array or if it's wrapped in a property
+                const commentsArray = Array.isArray(data) ? data : data.comments || [];
+                
+                // Add error handling for empty data
+                if (commentsArray.length === 0) {
+                    setComments([]);
+                    setIsLoading(false);
+                    return;
+                }
+                
+                const formattedComments: Comment[] = commentsArray.map((comment: any) => ({
                     id: comment.id,
                     author: {
-                        name: comment.author.name,
-                        email: comment.author.email,
+                        name: comment.author?.name || "Deleted User",
+                        email: comment.author?.email || "deleted@user.com",
                     },
                     authorId: comment.authorId,
-                    content: comment.content,
-                    createdAt: new Date(comment.createdAt),
-                    updatedAt: new Date(comment.updatedAt),
-                    flagCount: comment.flagCount,
-                    isFlagged: comment.isFlagged,
+                    content: comment.content || "",
+                    createdAt: new Date(comment.createdAt || Date.now()),
+                    updatedAt: new Date(comment.updatedAt || Date.now()),
+                    flagCount: comment.flagCount || 0,
+                    isFlagged: comment.isFlagged || false,
                     post: {
-                        title: comment.post.title,
+                        title: comment.post?.title || "Unknown Post",
                     },
                     postId: comment.postId,
                     status: comment.isFlagged ? "pending" : "approved",
@@ -95,6 +106,7 @@ export default function CommentsPage() {
                 setIsLoading(false);
             } catch (error) {
                 console.error("Failed to fetch comments:", error);
+                toast.error("Failed to load comments");
                 setIsLoading(false);
             }
         };
@@ -278,8 +290,8 @@ export default function CommentsPage() {
                                     return (
                                         <TableRow key={comment.id} className={rowClass}>
                                             <TableCell>
-                                                <div className="font-medium">{comment.author.name}</div>
-                                                <div className="text-xs text-gray-500">{comment.author.email}</div>
+                                                <div className="font-medium">{comment.author?.name || "Deleted User"}</div>
+                                                <div className="text-xs text-gray-500">{comment.author?.email || "deleted@user.com"}</div>
                                             </TableCell>
                                             <TableCell className="max-w-xs">
                                                 <div className="line-clamp-2">
@@ -289,11 +301,11 @@ export default function CommentsPage() {
                                                             Flagged
                                                         </span>
                                                     )}
-                                                    {comment.content}
+                                                    {comment.content || ""}
                                                 </div>
                                             </TableCell>
-                                            <TableCell>{comment.post.title}</TableCell>
-                                            <TableCell>{format(comment.createdAt, "MMM dd, yyyy")}</TableCell>
+                                            <TableCell>{comment.post?.title || "Unknown Post"}</TableCell>
+                                            <TableCell>{format(comment.createdAt || new Date(), "MMM dd, yyyy")}</TableCell>
                                             <TableCell className="text-right">
                                                 <div className="flex justify-end gap-2">
                                                     <Button
